@@ -227,3 +227,4 @@ out/
 !.env.example
 *.tsbuildinfo
 .superpowers/
+.serena/

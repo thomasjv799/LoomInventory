@@ -52,7 +52,7 @@ Diwali date records include source references from the [Government of India 2024
 | ------------------------------------------------------- | -------------------------------------------------------------- |
 | 1. Store selling sizes missing with HO supply           | Inventory: available / HO available; replenishment suggestions |
 | 2. HO selling sizes unavailable                         | Overview stockouts → Replenishment: HO shortages               |
-| 3. Feasible store rotation                              | Stores: Give good stock a better home                          |
+| 3. Feasible store rotation                              | Stores: Store rotations                                        |
 | 4. Store attribute preferences                          | Sales: fabric/craft/colour/style tables + store filter         |
 | 5. Store actual price bands and size mix                | Sales: price and size charts + store filter                    |
 | 6. Store non-sellers / slow stock                       | Stores: Slow stock by store                                    |
@@ -65,6 +65,18 @@ Diwali date records include source references from the [Government of India 2024
 | 13. Peak / non-peak size rationalisation                | Replenishment: size weights and cover-based unit suggestions   |
 | 14. Broken / healthy, fresh units, Hit / Average / Miss | Stores: store cards and assortment health                      |
 | 15. With / without matching dupatta demand              | Dupatta: attachment, unknown, pairs covered and shortage       |
+
+## Documentation and backend handoff
+
+Start with the [documentation index](docs/README.md), [dashboard guide](docs/dashboard-guide.md) and [metric definitions](docs/metrics.md). The [data dictionary](docs/data-dictionary.md) explains the 17-table [normalized import package](data/normalized/manifest.json); the [database design](docs/database-design.md), [API design](docs/api-design.md), [OpenAPI contract](docs/api/openapi.json) and [backend roadmap](docs/backend-roadmap.md) define the next milestone. SQL and API artifacts are proposed contracts, not deployed services.
+
+```sh
+npm run seed:database
+npm run contract:api
+npm run check:contracts
+```
+
+The export preserves all stock/sales records, qualifies reused synthetic bill references into consistent order headers, and validates ledger balances, transaction revenue, transit and relational keys locally. It is separate from the browser fixture; both derive from the same generated source. All monetary amounts use integer INR paise.
 
 ## Next milestone
 

@@ -44,3 +44,15 @@ Addressed findings: variant SKU matching across reports; launch-date coherence; 
 - Text contrast: ink/white 15.68:1, muted/white 5.07:1, bronze/white 4.80:1, muted/ivory 4.65:1. Green, red and amber status text/background pairs exceed 4.9:1 and include words/icons.
 
 This is a manual accessibility review plus semantic checks, not a formal assistive-technology certification. Backend, imports, durable operations and forecasting validation remain later milestones.
+
+## Documentation and backend-handoff update — 6 October 2026
+
+- Promotional page headings replaced with section names and one short explanation; redundant page eyebrow removed. Representative report titles changed to direct labels.
+- Added dashboard, metrics, code architecture, data/import, database, API and backend-roadmap guides with a linked index.
+- Exported 17 normalized tables and 19,708 rows, with checksums, load order, field contracts and portable/PostgreSQL reference DDL. No hosted database changes.
+- Qualified reused mock bill references into consistent date/location/channel order headers while preserving original references and sales values.
+- OpenAPI 3.1 design contains 22 paths and 25 proposed operations. Validated with openapi-spec-validator 0.9.0; backend behavior is not implemented.
+- Latest checks: 17 Vitest tests and 20 Python tests pass (37 total); TypeScript and production build pass. Eleven of the Python tests specifically cover the normalized/API handoff.
+- Independent review findings about omitted composite-FK metadata and integer API booleans resolved and rechecked. No remaining findings from that review.
+- All eight views checked again at 375/768/1024/1440px; document width matches viewport width. Updated all fourteen screenshots. Product/rationale drawers and mobile navigation exercised; mobile navigation returns focus to its opener.
+- PostgreSQL draft execution and actual FastAPI authorization/concurrency tests remain next-phase gates. SQLite validation is not represented as PostgreSQL deployment validation.

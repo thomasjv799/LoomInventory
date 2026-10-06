@@ -76,38 +76,23 @@ const views = [
   { id: "settings", name: "Settings", icon: Settings2 },
 ];
 const titles: Record<string, [string, string]> = {
-  overview: [
-    "A clearer view of every thread.",
-    "Your inventory, priorities and opportunities in one place.",
-  ],
-  inventory: [
-    "Every style. Every size.",
-    "Explore the stock behind your assortment.",
-  ],
-  stores: [
-    "The right style, in the right store.",
-    "Compare store health and surface thoughtful stock rotations.",
-  ],
-  sales: [
-    "What your customers are choosing.",
-    "Understand the attributes, prices and sizes behind demand.",
-  ],
+  overview: ["Overview", "Stock health, shortages and priority actions."],
+  inventory: ["Inventory", "Available stock by style, size and location."],
+  stores: ["Stores & Rotation", "Store stock health and feasible transfers."],
+  sales: ["Sales & Attributes", "Sales by attribute, selling price and size."],
   replenishment: [
-    "Stay a step ahead of demand.",
-    "Balance cover, lead times and the season ahead.",
+    "Replenishment & Forecasts",
+    "Stock suggestions, lead times and seasonal demand.",
   ],
   events: [
-    "The moments behind the momentum.",
-    "Connect a seasonal calendar with fictional creator activity.",
+    "Events & Influencers",
+    "Seasonal dates and fictional creator activity alongside sales.",
   ],
   dupatta: [
-    "Complete the story.",
-    "Understand matching demand and the stock needed to complete a set.",
+    "Dupatta Analysis",
+    "Matching demand, stock coverage and shortages.",
   ],
-  settings: [
-    "Make the studio work for you.",
-    "Adjust the assumptions behind your local demo recommendations.",
-  ],
+  settings: ["Settings", "Demo thresholds and replenishment assumptions."],
 };
 const sum = <T,>(a: T[], fn: (r: T) => number) =>
   a.reduce((n, r) => n + fn(r), 0);
@@ -754,7 +739,6 @@ export default function Dashboard() {
         <main id="main-content">
           <div className="page-heading">
             <div>
-              <div className="eyebrow">THE LOOM / INVENTORY INTELLIGENCE</div>
               <h1>{titles[view][0]}</h1>
               <p>{titles[view][1]}</p>
             </div>
@@ -990,7 +974,7 @@ export default function Dashboard() {
                 />
               </div>
               <Panel
-                title="Your attention, where it matters."
+                title="Attention required"
                 subtitle={
                   attention.length +
                   " signals · selling size shortages and inactive stock"
@@ -1070,7 +1054,7 @@ export default function Dashboard() {
               </Panel>
               <div className="split-grid">
                 <Panel
-                  title="The rhythm of demand"
+                  title="Sales demand"
                   subtitle={
                     number(sum(sales, (s) => s.quantity)) +
                     " units sold · selected period"
@@ -1092,7 +1076,7 @@ export default function Dashboard() {
                   />
                 </Panel>
                 <Panel
-                  title="A considered next move"
+                  title="Stock recommendations"
                   subtitle={plans.length + " stock recommendations"}
                 >
                   <div className="opportunity-list">
@@ -1141,7 +1125,7 @@ export default function Dashboard() {
               </div>
               <div className="split-grid">
                 <Panel
-                  title="Gaining momentum"
+                  title="Seven-day increases"
                   subtitle={
                     "Last 7 days versus previous 7 · " +
                     settings.spike +
@@ -1158,7 +1142,7 @@ export default function Dashboard() {
                   />
                 </Panel>
                 <Panel
-                  title="Worth a closer look"
+                  title="Ten-day declines"
                   subtitle={
                     "Last 10 days versus previous 10 · " +
                     settings.drop +
@@ -1206,7 +1190,7 @@ export default function Dashboard() {
                 />
               </div>
               <Panel
-                title="The assortment ledger"
+                title="Inventory by size and location"
                 subtitle={
                   rows.length +
                   " SKU / size / location rows · " +
@@ -1404,7 +1388,7 @@ export default function Dashboard() {
                 />
               </Panel>
               <Panel
-                title="Give good stock a better home"
+                title="Store rotations"
                 subtitle="Feasible rotations only · recipient gaps and donor cover are protected. Every shared source unit is allocated once."
               >
                 <DataTable
@@ -1475,7 +1459,7 @@ export default function Dashboard() {
               </div>
               <div className="split-grid">
                 <Panel
-                  title="Price points that move"
+                  title="Actual selling-price bands"
                   subtitle="Actual selling price per unit; suggested MRP is never used."
                 >
                   <ReportChart
