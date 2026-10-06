@@ -1,0 +1,4 @@
+# Approved UI milestone
+
+Eight clickable sections: Overview, Inventory, Stores & Rotation, Sales & Attributes, Replenishment & Forecasts, Events & Influencers, Dupatta Analysis, Settings.
+Next.js/TypeScript with Tailwind, accessible shadcn-style Radix primitives, Lucide, TanStack Table and Recharts. Ivory / ink / bronze; Newsreader and Roboto. Public verified Loom image references; 24 outfits and six dupattas. Python deterministic generator; fixed 2026-10-06 as-of and 24 months of ledger, sales, transfer and event history. No backend credentials or uploads. Movement-led inventory, separate sales pricing, consignment ownership, Dispatch center exclusion and transit accounting. All fifteen questions have reports; settings recompute supported classifications/replenishment, forecasts clearly precomputed. URL filters, drawers, CSV export, responsive/accessibility verification and screenshots required.
