@@ -1,5 +1,12 @@
 # Prototype verification
 
+## Events filter clarification — 7 October 2026
+
+- Replaced the generic inventory filter bar with activity period, product and date controls. Calendar year stays in the calendar; store/channel controls sit in the sales timeline. Unsupported carried inventory filters are cleared explicitly.
+- Visible creator counts and sales totals update with selections. Browser examples: P003 has two recent creator records; store-channel sales total 403 units, then selecting Delhi gives 86. P001 in Delhi changes from two activity records and 81 sales units over 24 months to one activity record and seven units over seven days.
+- Calendar year independently changes festival rows. Store/channel changes retain creator activity and calendar context. The activity period presets were exercised; custom date inputs remain available.
+- TypeScript and production build passed. No page overflow at 375/768/1024/1440px; new desktop/mobile screenshots record the scoped controls.
+
 ## Demo coverage update — 7 October 2026
 
 - Expanded deterministic fixtures to 7,471 sales, 15,953 movements and 38,070 normalized rows across the same 17 database-ready tables. Linked receipts and deductions preserve stock accounting; two intentionally inactive styles remain without recent sales.

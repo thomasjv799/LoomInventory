@@ -281,6 +281,24 @@ export default function Dashboard() {
       "Stores & Rotation covers retail stores. Warehouse filters cleared; use Inventory or Replenishment for HO – Central Warehouse.",
     );
   }, [view, params]);
+  useEffect(() => {
+    if (view !== "events") return;
+    const unsupported = [
+      "category",
+      "fabric",
+      "color",
+      "craft",
+      "size",
+      "status",
+    ];
+    const p = new URLSearchParams(window.location.search);
+    if (!unsupported.some((key) => p.has(key))) return;
+    unsupported.forEach((key) => p.delete(key));
+    window.history.replaceState(null, "", "/?" + p.toString());
+    setToast(
+      "Inventory attribute filters cleared. Use this page's product and date controls.",
+    );
+  }, [view, params]);
   const navigate = (
     id: string,
     extra: Record<string, string | undefined> = {},
@@ -807,7 +825,7 @@ export default function Dashboard() {
             </span>
             <span className="asof">Stock as of 06 Oct 2026</span>
           </div>
-          {view !== "settings" && (
+          {view !== "settings" && view !== "events" && (
             <div className="filters">
               <div className="filter-top">
                 {(view !== "events" || expanded || !!filters.location) && (
@@ -1982,6 +2000,92 @@ export default function Dashboard() {
           )}
           {view === "events" && (
             <>
+              <div
+                className="filters"
+                aria-label="Creator activity and sales filters"
+              >
+                <div className="filter-top">
+                  <Select
+                    label="Activity period"
+                    value={period}
+                    onChange={(v) =>
+                      v !== "custom" &&
+                      update({
+                        from: dayBefore(data.asOf, +v),
+                        to: dayBefore(data.asOf, 1),
+                      })
+                    }
+                    options={[
+                      ...periods.filter((p) => p.value !== "custom"),
+                      ...(period === "custom"
+                        ? [
+                            {
+                              value: "custom",
+                              label: "Custom dates",
+                              disabled: true,
+                            },
+                          ]
+                        : []),
+                    ]}
+                  />
+                  <Select
+                    label="Product"
+                    value={filters.q}
+                    onChange={(v) => update({ q: v })}
+                    options={[
+                      { value: "", label: "All products" },
+                      ...(filters.q &&
+                      !data.products.some((p) => p.sku === filters.q)
+                        ? [{ value: filters.q, label: "Search: " + filters.q }]
+                        : []),
+                      ...data.products.map((p) => ({
+                        value: p.sku,
+                        label: p.sku + " · " + p.name,
+                      })),
+                    ]}
+                  />
+                  <label className="date-label">
+                    From
+                    <input
+                      type="date"
+                      aria-label="Activity from date"
+                      value={filters.from}
+                      min={data.historyStart}
+                      max={filters.to}
+                      onChange={(e) => update({ from: e.target.value })}
+                    />
+                  </label>
+                  <label className="date-label">
+                    To
+                    <input
+                      type="date"
+                      aria-label="Activity to date"
+                      value={filters.to}
+                      min={filters.from}
+                      max="2026-10-05"
+                      onChange={(e) => update({ to: e.target.value })}
+                    />
+                  </label>
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      update({
+                        q: undefined,
+                        from: undefined,
+                        to: undefined,
+                        location: undefined,
+                        channel: undefined,
+                      })
+                    }
+                  >
+                    Reset selection
+                  </Button>
+                </div>
+                <div className="filter-caption">
+                  Product and dates filter creator activity and sales. The
+                  calendar uses its own year.
+                </div>
+              </div>
               <div className="split-grid">
                 <Panel
                   title="The seasonal calendar"
@@ -2041,7 +2145,7 @@ export default function Dashboard() {
                   </div>
                 </Panel>
                 <Panel
-                  title="Seen, styled, shared"
+                  title={`Creator activity · ${data.influencers.filter((i) => i.date >= filters.from! && i.date <= filters.to! && relevantProducts.some((p) => p.id === i.productId)).length} records`}
                   subtitle="Fictional creator records; timing alone does not establish causation."
                 >
                   <div className="creator-list">
@@ -2088,8 +2192,41 @@ export default function Dashboard() {
                 </Panel>
               </div>
               <Panel
-                title="A timeline, with context"
-                subtitle="Daily units with shopping-window and creator overlays. Use a product filter to examine a specific style."
+                title="Sales around events and creator activity"
+                subtitle={`${number(sum(sales, (s) => s.quantity))} units · ${sales.length} sales records · ${filters.from} to ${filters.to}`}
+                action={
+                  <div
+                    className="filter-top"
+                    aria-label="Sales timeline filters"
+                  >
+                    <Select
+                      label="Sales location"
+                      value={filters.location}
+                      onChange={(v) =>
+                        update({ location: v, channel: undefined })
+                      }
+                      options={[
+                        { value: "", label: "All locations" },
+                        ...data.locations.map((l) => ({
+                          value: l.id,
+                          label: l.name,
+                        })),
+                      ]}
+                    />
+                    <Select
+                      label="Sales channel"
+                      value={filters.channel}
+                      onChange={(v) =>
+                        update({ channel: v, location: undefined })
+                      }
+                      options={[
+                        { value: "", label: "All channels" },
+                        { value: "Ecommerce", label: "Ecommerce" },
+                        { value: "Store", label: "Stores" },
+                      ]}
+                    />
+                  </div>
+                }
               >
                 <ReportChart
                   data={series(sales)}

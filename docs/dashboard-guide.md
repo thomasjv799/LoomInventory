@@ -54,7 +54,7 @@ Size-pack tables show observed sales mix, exposure, stockout days and peak/non-p
 
 ## 6. Events & Influencers
 
-Location is a secondary control, shown when Filters is expanded or a location is already selected. It scopes the sales timeline; the event calendar and creator observations remain independent of store location. Settings has no report filters.
+Controls are scoped to the content they change: Calendar year filters festivals; Product and From/To dates filter creator records and sales; Sales location and Sales channel sit in the sales timeline and affect only that timeline. Matching creator counts and sales totals visibly reflect the selection. Changing a sales location clears the channel, and changing the channel clears the location, preventing contradictory store/ecommerce selections. Inventory attribute/status/size filters carried from other pages are cleared with a notice. Settings has no report filters.
 
 The year selector controls the calendar independently of the sales date filter. Referenced festival dates have source URLs; shopping windows and multipliers are simulated. Creator records are fictional and linked to products and dates. Demand overlays make timing visible, but do not prove that a creator caused sales growth.
 
