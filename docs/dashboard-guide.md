@@ -20,7 +20,7 @@ The snapshot is 6 October 2026. Sales end on 5 October. The warehouse is labelle
 
 ## 1. Overview
 
-Use the overview to decide which report needs attention first. Available stock, selling-size stockouts, broken options and inactive units link to the relevant report. The attention table shows selling-size shortages and held inactive stock, with a suggested next step. Demand history, replenishment recommendations and seven-/ten-day changes give context.
+Use the overview to decide which report needs attention first. Available stock, selling-size stockouts, styles missing sizes and inactive units link to the relevant report. The attention table shows selling-size shortages and held inactive stock, with a suggested next step. Demand history, replenishment recommendations and seven-/ten-day changes give context.
 
 Example: search `LM-P001` and review its store-size shortages, then open a recommendation to see the available HO supply and protected donor cover. A low or zero sales baseline can mean insufficient evidence; it is not automatically a demand forecast.
 
@@ -34,7 +34,7 @@ Use **Selling stockout** for recently selling sizes with no available stock, **L
 
 This report covers retail stores only. Its Store filter lists the five stores, and warehouse/ecommerce selections carried from another report are cleared with a notice. Use Inventory for HO stock and Replenishment for HO-to-store supply and production shortages.
 
-Store cards and assortment rows compare healthy/broken outfit options, freshness and Hit/Average/Miss classifications. A healthy option has the required quantity in every applicable core size. Freshness is a share of available outfit units, rather than a percentage of all styles.
+Store cards show how many outfit styles have all required sizes and how many styles are missing sizes. For example, **18 of 24 styles have all required sizes** means 18 styles meet the configured stock minimum in every applicable required size; six do not. It counts styles, not units or individual missing sizes, and does not describe garment damage. The table names missing sizes. Freshness is a share of available outfit units, rather than a percentage of all styles; Hit/Average/Miss reflects sales performance.
 
 The rotation report pairs donor excess with a recipient's gap. Suggestions protect each donor's demand and allocate a shared stock pool once. The slow-stock report identifies available units with low rates or long inactivity. Review sales exposure, season and fit before treating slow stock as an outward instruction.
 

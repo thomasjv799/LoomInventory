@@ -40,7 +40,7 @@ Next.js serves a static application shell and the public fixture. The interactiv
 | tests/                          | Analytics, fixture integrity and backend-handoff contract checks                                                                          |
 | docs/                           | Guides, assumptions, API/SQL drafts and screenshots                                                                                       |
 
-The original repository used a Python-oriented ignore template, including `lib/`; the prototype's shared TypeScript files are already tracked in Git. New files under that directory must also be explicitly tracked or the ignore rule narrowed. Always inspect the staged file list before pushing.
+The original repository used a Python-oriented ignore template, including `lib/`. That rule has been removed so the shared TypeScript provider, types, analytics and filter modules are included in Git. Always inspect the staged file list before pushing.
 
 ## State and interactions
 

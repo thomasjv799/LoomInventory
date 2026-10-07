@@ -1036,7 +1036,7 @@ export default function Dashboard() {
                   }
                 />
                 <Metric
-                  title="Broken options"
+                  title="Styles missing sizes"
                   value={number(broken)}
                   note="Across selected store assortments"
                   icon={Layers}
@@ -1389,7 +1389,10 @@ export default function Dashboard() {
                       <p>{h.location.name.split(" · ")[1]}</p>
                       <strong>
                         {healthy}
-                        <span> / {h.options.length} healthy options</span>
+                        <span>
+                          {" "}
+                          of {h.options.length} styles have all required sizes
+                        </span>
                       </strong>
                       <div className="progress">
                         <i
@@ -1402,7 +1405,9 @@ export default function Dashboard() {
                         />
                       </div>
                       <div className="store-card-footer">
-                        <span>{h.options.length - healthy} broken</span>
+                        <span>
+                          {h.options.length - healthy} styles missing sizes
+                        </span>
                         <span>
                           {stock ? Math.round((fresh / stock) * 100) : 0}% fresh
                           stock
@@ -1413,14 +1418,14 @@ export default function Dashboard() {
                 })}
               </div>
               <Panel
-                title="Assortment health, style by style"
+                title="Size availability by style"
                 subtitle="Core size completeness · 30-day sell-through classification. Freshness is share of available outfit units from current-season styles launched within the configured window."
               >
                 <DataTable
                   data={health.flatMap((h) =>
                     h.options.map((o) => ({ ...o, store: h.location.name })),
                   )}
-                  label="Store option health"
+                  label="Store size availability"
                   columns={[
                     {
                       id: "product",
@@ -1435,7 +1440,7 @@ export default function Dashboard() {
                       cell: ({ row }) => (
                         <Badge tone={row.original.healthy ? "green" : "amber"}>
                           {row.original.healthy
-                            ? "Healthy"
+                            ? "All required sizes available"
                             : settings.coreSizes.length
                               ? "Missing " + row.original.missing.join(", ")
                               : "No core sizes configured"}
@@ -1467,7 +1472,7 @@ export default function Dashboard() {
               </Panel>
               <Panel
                 title="Store rotations"
-                subtitle="Feasible rotations only · recipient gaps and donor cover are protected. Every shared source unit is allocated once."
+                subtitle="Transfers fill missing stock while keeping enough stock at the sending store. The same units are never suggested twice."
               >
                 <DataTable
                   data={plans.filter((p) => p.kind === "Rotate")}
@@ -1698,8 +1703,8 @@ export default function Dashboard() {
                 />
               </div>
               <Panel
-                title="Fill the gaps with intention"
-                subtitle="Suggestions include timely inbound stock. Changing cover settings recomputes this report."
+                title="Suggested stock replenishment"
+                subtitle="Stock already on the way is included. Suggestions update when you change the target stock days in Settings."
               >
                 <DataTable
                   data={plans}
@@ -2361,7 +2366,7 @@ export default function Dashboard() {
                         [
                           "minimum",
                           "Minimum core-size stock",
-                          "Units required for a healthy size",
+                          "Units needed for each required size",
                           1,
                           20,
                         ],
@@ -2404,7 +2409,7 @@ export default function Dashboard() {
                       </Switch.Root>
                     </div>
                     <fieldset className="core-sizes">
-                      <legend>Core sizes for a healthy option</legend>
+                      <legend>Required sizes for each style</legend>
                       {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
                         <label key={size}>
                           <input
@@ -2609,7 +2614,8 @@ export default function Dashboard() {
               <p>{detail.reason}</p>
               <div className="demo-note">
                 <Info size={14} />
-                This suggestion uses synthetic demand and protected donor cover.
+                This suggestion uses demo sales and keeps enough stock at the
+                sending location.
               </div>
             </>
           )}
