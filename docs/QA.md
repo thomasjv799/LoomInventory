@@ -1,5 +1,15 @@
 # Prototype verification
 
+## Demo coverage update — 7 October 2026
+
+- Expanded deterministic fixtures to 7,471 sales, 15,953 movements and 38,070 normalized rows across the same 17 database-ready tables. Linked receipts and deductions preserve stock accounting; two intentionally inactive styles remain without recent sales.
+- Every active product/applicable size/location combination has a sale in the shortest seven-day preset, including fully specified category, fabric, colour, craft and SKU filters. Each store has shortages, rotations, recent receipts, transit, matching-dupatta attachment and upward/downward trend scenarios.
+- Dropdown choices count real matches under the other selected filters. Incompatible choices are disabled; no fallback rows ignore the user's scope. Replenishment counts inventory rather than recommendations alone so HO production candidates and inbound-only variants remain selectable.
+- HO production candidates explicitly retain HO scope independent of store/channel selection. Attribute, search, size and stock-status filters still apply. Operational no-action tables, arbitrary unmatched searches, custom dates without sales and impossible catalogue combinations may legitimately be empty.
+- Automated checks: 22 Vitest tests and 20 Python tests pass; TypeScript and production build pass. Normalized records, hashes, foreign keys, chronological non-negative balances and donor allocation remain validated.
+- Browser: Delhi inventory, inactive stock, attention signals, rotation, replenishment, completed receipts, transit and matching-dupatta reports populated. Delhi + Stores + seven days + Suit sets + Chanderi + Pink + Embroidered + M returns five sales lines and populated attribute tables. This combination has no page overflow at 375/768/1024/1440px.
+- Independent review found and resolved replenishment filters hiding HO and inbound-only variants. The new shared filter module is explicitly tracked despite the inherited `lib/` ignore rule.
+
 The frontend uses simulated business data. Image references were observed on public catalogue pages; festival dates have per-record source links. No stock operations or backend integrations are implemented.
 
 ## Automated checks

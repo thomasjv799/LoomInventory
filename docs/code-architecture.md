@@ -32,6 +32,7 @@ Next.js serves a static application shell and the public fixture. The interactiv
 | components/ui/                  | Shared Button and Radix Dialog primitives                                                                                                 |
 | lib/types.ts                    | Product, variant, ledger, sales, transfer, event, filter, settings and report interfaces                                                  |
 | lib/provider.ts                 | Asynchronous fixture access seam                                                                                                          |
+| lib/filter-options.ts           | Counts compatible catalogue/location choices from real report records; disables incompatible dropdown options                             |
 | lib/analytics.ts                | Inventory reconstruction, filtering, recommendations, option health, trends, price bands, attributes, dupatta allocation and CSV escaping |
 | scripts/generate_mock.py        | Canonical fixture generation and eleven logical input projections                                                                         |
 | scripts/export_database_seed.py | Normalization, relational DDL and reconciliation                                                                                          |

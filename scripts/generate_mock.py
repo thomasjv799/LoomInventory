@@ -85,10 +85,44 @@ for day in dates:
    mid=move(vid,loc['id'],-qty,day,'Ecommerce sale' if li==0 else 'Store sale')
    mrp=p['suggestedMrp']+rng.choice([0,10000,20000]); net=round(mrp*rng.choice([.75,.85,.9,1]))*qty
    sales.append({'id':f'SALE{len(sales)+1:06d}','orderId':f'BILL{len(sales)//2:06d}','variantId':vid,'productId':p['id'],'locationId':loc['id'],'channel':'Ecommerce' if li==0 else 'Store','date':day.isoformat(),'quantity':qty,'mrp':mrp,'netValue':net,'movementId':mid,'dupattaAttached':False,'matchingStatus':'unknown' if len(sales)%7==0 else 'without'})
+# Deterministic catalogue coverage in three recent windows. Every active
+# variant/location has a real sale, linked deduction and received stock.
+# The two inactive styles deliberately retain their no-recent-sales evidence.
+def coverage_sale(p, size, loc, day, qty=1):
+ vid=p['id']+'-'+size;ref=f'TCOV{len(transfers)+1:05d}'
+ if loc=='HO':move(vid,'HO',qty,day,'Production receipt')
+ else:
+  dispatch=day-timedelta(days=3)
+  move(vid,'HO',qty,dispatch,'Production receipt')
+  move(vid,'HO',-qty,dispatch,'Consignment issue',reference=ref)
+  move(vid,loc,qty,day,'Consignment receipt',reference=ref)
+  transfers.append({'id':ref,'variantId':vid,'source':'HO','destination':loc,'dispatched':qty,'received':qty,'inTransit':0,'dispatchDate':dispatch.isoformat(),'receivedDate':day.isoformat(),'eta':day.isoformat(),'ownership':'Central'})
+ mid=move(vid,loc,-qty,day,'Ecommerce sale' if loc=='HO' else 'Store sale')
+ sales.append({'id':f'SALE{len(sales)+1:06d}','orderId':f'COVERAGE{len(sales)+1:06d}','variantId':vid,'productId':p['id'],'locationId':loc,'channel':'Ecommerce' if loc=='HO' else 'Store','date':day.isoformat(),'quantity':qty,'mrp':p['suggestedMrp'],'netValue':round(p['suggestedMrp']*.85)*qty,'movementId':mid,'dupattaAttached':False,'matchingStatus':'without'})
+for p in products:
+ if p['id'] in ['P007','P014']:continue
+ for size in p['sizes']:
+  for loc in locations:
+   for age in [22,12,1]:coverage_sale(p,size,loc['id'],AS_OF-timedelta(days=age))
+# Each store has clear upward and downward trends, not only a network aggregate.
+for loc in locations:
+ coverage_sale(next(p for p in products if p['id']=='P003'),'M',loc['id'],AS_OF-timedelta(days=1),30)
+ coverage_sale(next(p for p in products if p['id']=='P005'),'M',loc['id'],AS_OF-timedelta(days=12),18)
 # Named scenarios: store M shortage with HO supply; different location excess; HO fast seller shortage.
 for vid,loc,target in [('P001-M','S1',0),('P001-M','S2',28),('P001-L','S1',0),('P001-L','S2',35),('P001-L','HO',0),('P003-M','HO',0),('P003-L','HO',0),('P005-S','S3',0),('P005-M','S3',0),('P010-M','S4',0)]:
  current=stock[(vid,loc,loc+'-MAIN','sellable')]
  if current!=target:move(vid,loc,target-current,AS_OF,'QC correction')
+# Per-store feasible rotations with a protected donor, plus an HO shortage.
+# Original P001-M transit scenario remains unchanged for accounting drilldowns.
+for i,(pid,dest,donor) in enumerate([('P001','S1','S2'),('P004','S2','S3'),('P005','S3','S4'),('P010','S4','S5'),('P009','S5','S1')]):
+ for vid,loc,target in [(pid+'-L',dest,0),(pid+'-L',donor,60),(pid+'-L','HO',0),('P003-S',dest,1)]:
+  current=stock[(vid,loc,loc+'-MAIN','sellable')]
+  if current!=target:move(vid,loc,target-current,AS_OF,'QC correction')
+ # An additional open shipment gives every store a transit example.
+ vid='P012-M';ref=f'TSTORE{i+1}';qty=6
+ if stock[(vid,'HO','HO-MAIN','sellable')]<qty:move(vid,'HO',qty+12,AS_OF,'Production receipt')
+ move(vid,'HO',-qty,AS_OF,'Consignment issue',reference=ref)
+ transfers.append({'id':ref,'variantId':vid,'source':'HO','destination':dest,'dispatched':qty,'received':0,'inTransit':qty,'dispatchDate':AS_OF.isoformat(),'receivedDate':None,'eta':(AS_OF+timedelta(days=3)).isoformat(),'ownership':'Central'})
 for vid in ['P001-M','P004-S','P007-L']:
  move(vid,'HO',-3,AS_OF,'Dispatch staging')
  move(vid,'HO',3,AS_OF,'Dispatch staging',binid='HO-DISPATCH')
@@ -123,6 +157,10 @@ for year,festival_day,source in [(2024,'2024-10-31','https://cbcindia.gov.in/wp-
  events.append({'id':f'DIWALI{year}','name':f'Diwali {year}','start':festival_day,'end':festival_day,'kind':'Referenced festival date','multiplier':1,'sourceUrl':source,'note':'Source reference; regional observance may differ. Demand multipliers are simulated separately.'})
 influencers=[{'id':'I1','name':'Anaya Kapoor','type':'Creator','productId':'P003','date':'2026-09-29','channel':'Instagram','note':'Fictional activity; association does not establish causation'},{'id':'I2','name':'Meera Sethi','type':'Stylist','productId':'P009','date':'2026-10-02','channel':'Editorial','note':'Fictional activity; association does not establish causation'}]
 influencers += [{'id':'IH2024','name':'Anaya Kapoor','type':'Creator','productId':'P001','date':'2024-10-15','channel':'Instagram','note':'Fictional historical activity'},{'id':'IH2025','name':'Meera Sethi','type':'Stylist','productId':'P007','date':'2025-04-15','channel':'Editorial','note':'Fictional historical activity'}]
+# Creator observations for every catalogue product make product drilldowns useful.
+# These are explicitly fictional and do not assert a campaign or causal effect.
+for p in products:
+ influencers.append({'id':'ICOV-'+p['id'],'name':'Demo creator '+p['id'],'type':'Creator','productId':p['id'],'date':'2026-10-04','channel':'Instagram','note':'Fictional demo observation; association does not establish causation'})
 forecasts=[];size_forecasts=[]
 for p in products:
  base=sum(s['quantity'] for s in sales if s['productId']==p['id'] and s['date']>='2026-09-08')/28

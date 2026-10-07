@@ -62,6 +62,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "./ui/dialog";
+import { facetCounts, type Facet } from "../lib/filter-options";
 import { ProductImage } from "./product-image";
 import { DataTable } from "./data-table";
 import { ReportChart } from "./charts";
@@ -158,7 +159,7 @@ function Select({
   label: string;
   value?: string;
   onChange: (v: string) => void;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; disabled?: boolean }[];
 }) {
   return (
     <label className="select-label">
@@ -169,7 +170,7 @@ function Select({
         onChange={(e) => onChange(e.target.value)}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value}>
+          <option key={o.value} value={o.value} disabled={o.disabled}>
             {o.label}
           </option>
         ))}
@@ -327,6 +328,38 @@ export default function Dashboard() {
         : [],
     [data, settings, filters],
   );
+  const availableChoices = useMemo(() => {
+    const choices = {} as Record<Facet, Map<string, number>>;
+    for (const facet of [
+      "location",
+      "channel",
+      "category",
+      "fabric",
+      "color",
+      "craft",
+      "size",
+      "status",
+    ] as Facet[])
+      choices[facet] = data
+        ? facetCounts(data, filters, settings, view, facet)
+        : new Map();
+    return choices;
+  }, [data, filters, settings, view]);
+  const withAvailability = (
+    facet: Facet,
+    options: { value: string; label: string }[],
+  ) =>
+    options.map((option) => {
+      if (!option.value) return option;
+      const count = availableChoices[facet].get(option.value) || 0;
+      return {
+        ...option,
+        disabled: count === 0,
+        label: count
+          ? option.label + " · " + count
+          : option.label + " · No matches",
+      };
+    });
   const prodCell = (p: Product, meta?: string) => (
     <button
       className="product-cell"
@@ -428,6 +461,14 @@ export default function Dashboard() {
   );
   const short = rows.filter((r) => r.available === 0 && r.sold > 0);
   const hoShort = short.filter((r) => r.locationId === "HO");
+  // Production candidates always describe HO; store selection scopes transfers.
+  const productionCandidates = data
+    ? filterInventory(
+        data,
+        { ...filters, location: "HO", channel: "Ecommerce" },
+        settings,
+      ).filter((r) => r.available === 0 && r.sold > 0)
+    : [];
   const health = data
     ? data.locations
         .filter(
@@ -764,23 +805,23 @@ export default function Dashboard() {
                   label="Store or warehouse"
                   value={filters.location}
                   onChange={(v) => update({ location: v })}
-                  options={[
+                  options={withAvailability("location", [
                     { value: "", label: "All locations" },
                     ...data.locations.map((l) => ({
                       value: l.id,
                       label: l.name,
                     })),
-                  ]}
+                  ])}
                 />
                 <Select
                   label="Sales channel"
                   value={filters.channel}
                   onChange={(v) => update({ channel: v })}
-                  options={[
+                  options={withAvailability("channel", [
                     { value: "", label: "All channels" },
                     { value: "Ecommerce", label: "Ecommerce" },
                     { value: "Store", label: "Stores" },
-                  ]}
+                  ])}
                 />
                 <Select
                   label="Date period"
@@ -828,12 +869,12 @@ export default function Dashboard() {
                     label="Category"
                     value={filters.category}
                     onChange={(v) => update({ category: v })}
-                    options={[
+                    options={withAvailability("category", [
                       { value: "", label: "All categories" },
                       ...unique(data.products.map((p) => p.category)).map(
                         (v) => ({ value: v, label: v }),
                       ),
-                    ]}
+                    ])}
                   />
                   {(["fabric", "color", "craft"] as const).map((k) => (
                     <Select
@@ -841,25 +882,25 @@ export default function Dashboard() {
                       label={k}
                       value={filters[k]}
                       onChange={(v) => update({ [k]: v })}
-                      options={[
+                      options={withAvailability(k, [
                         { value: "", label: "All " + k + "s" },
                         ...unique(data.products.map((p) => p[k])).map((v) => ({
                           value: v,
                           label: v,
                         })),
-                      ]}
+                      ])}
                     />
                   ))}
                   <Select
                     label="Size"
                     value={filters.size}
                     onChange={(v) => update({ size: v })}
-                    options={[
+                    options={withAvailability("size", [
                       { value: "", label: "All sizes" },
                       ...["XS", "S", "M", "L", "XL", "XXL", "Free"].map(
                         (v) => ({ value: v, label: v }),
                       ),
-                    ]}
+                    ])}
                   />
                   {(view === "inventory" ||
                     view === "overview" ||
@@ -868,7 +909,7 @@ export default function Dashboard() {
                       label="Stock status"
                       value={filters.status}
                       onChange={(v) => update({ status: v })}
-                      options={[
+                      options={withAvailability("status", [
                         { value: "", label: "All stock statuses" },
                         ...[
                           "Healthy",
@@ -877,7 +918,7 @@ export default function Dashboard() {
                           "Selling stockout",
                           "Inactive",
                         ].map((v) => ({ value: v, label: v })),
-                      ]}
+                      ])}
                     />
                   )}
                   <label className="date-label">
@@ -1614,7 +1655,7 @@ export default function Dashboard() {
                 />
                 <Metric
                   title="HO selling size shortages"
-                  value={hoShort.length.toString()}
+                  value={productionCandidates.length.toString()}
                   note="Sizes sold recently with zero availability"
                   icon={TriangleAlert}
                 />
@@ -1631,10 +1672,10 @@ export default function Dashboard() {
               </Panel>
               <Panel
                 title="Head Office shortages"
-                subtitle="Production candidates: recently selling sizes with no HO stock. Quantities are cover-based demonstrations."
+                subtitle="HO scope, independent of the selected store; product and size filters apply. Cover-based production candidates."
               >
                 <DataTable
-                  data={hoShort}
+                  data={productionCandidates}
                   columns={[
                     ...productCols.slice(0, 4),
                     {
