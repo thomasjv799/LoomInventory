@@ -32,6 +32,8 @@ Use **Selling stockout** for recently selling sizes with no available stock, **L
 
 ## 3. Stores & Rotation
 
+This report covers retail stores only. Its Store filter lists the five stores, and warehouse/ecommerce selections carried from another report are cleared with a notice. Use Inventory for HO stock and Replenishment for HO-to-store supply and production shortages.
+
 Store cards and assortment rows compare healthy/broken outfit options, freshness and Hit/Average/Miss classifications. A healthy option has the required quantity in every applicable core size. Freshness is a share of available outfit units, rather than a percentage of all styles.
 
 The rotation report pairs donor excess with a recipient's gap. Suggestions protect each donor's demand and allocate a shared stock pool once. The slow-stock report identifies available units with low rates or long inactivity. Review sales exposure, season and fit before treating slow stock as an outward instruction.

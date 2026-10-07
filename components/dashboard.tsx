@@ -268,6 +268,20 @@ export default function Dashboard() {
     }
     window.history.pushState(null, "", "/?" + p.toString());
   }, []);
+  useEffect(() => {
+    if (
+      view !== "stores" ||
+      (params.get("location") !== "HO" && params.get("channel") !== "Ecommerce")
+    )
+      return;
+    const p = new URLSearchParams(window.location.search);
+    if (p.get("location") === "HO") p.delete("location");
+    if (p.get("channel") === "Ecommerce") p.delete("channel");
+    window.history.replaceState(null, "", "/?" + p.toString());
+    setToast(
+      "Stores & Rotation covers retail stores. Warehouse filters cleared; use Inventory or Replenishment for HO.",
+    );
+  }, [view, params]);
   const navigate = (
     id: string,
     extra: Record<string, string | undefined> = {},
@@ -802,15 +816,20 @@ export default function Dashboard() {
             <div className="filters">
               <div className="filter-top">
                 <Select
-                  label="Store or warehouse"
+                  label={view === "stores" ? "Store" : "Store or warehouse"}
                   value={filters.location}
                   onChange={(v) => update({ location: v })}
                   options={withAvailability("location", [
-                    { value: "", label: "All locations" },
-                    ...data.locations.map((l) => ({
-                      value: l.id,
-                      label: l.name,
-                    })),
+                    {
+                      value: "",
+                      label: view === "stores" ? "All stores" : "All locations",
+                    },
+                    ...data.locations
+                      .filter((l) => view !== "stores" || l.type === "store")
+                      .map((l) => ({
+                        value: l.id,
+                        label: l.name,
+                      })),
                   ])}
                 />
                 <Select
@@ -819,7 +838,9 @@ export default function Dashboard() {
                   onChange={(v) => update({ channel: v })}
                   options={withAvailability("channel", [
                     { value: "", label: "All channels" },
-                    { value: "Ecommerce", label: "Ecommerce" },
+                    ...(view === "stores"
+                      ? []
+                      : [{ value: "Ecommerce", label: "Ecommerce" }]),
                     { value: "Store", label: "Stores" },
                   ])}
                 />
