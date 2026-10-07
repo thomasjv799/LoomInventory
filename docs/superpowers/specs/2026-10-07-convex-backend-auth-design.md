@@ -1,6 +1,6 @@
 # Convex backend and Better Auth login design
 
-Status: written design for review, 7 October 2026. Application code for this milestone has not been implemented or deployed.
+Status: design approved by the user, 7 October 2026. Application code for this milestone has not been implemented or deployed.
 
 ## Intended outcome and decisions
 
