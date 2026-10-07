@@ -17,7 +17,6 @@ import {
   ArrowRight,
   Menu,
   X,
-  Sparkles,
   CheckCircle2,
   TriangleAlert,
   Clock3,
@@ -370,7 +369,9 @@ export default function Dashboard() {
         ...option,
         disabled: count === 0,
         label: count
-          ? option.label + " · " + count
+          ? facet === "location"
+            ? option.label
+            : option.label + " · " + count
           : option.label + " · No matches",
       };
     });
@@ -708,14 +709,6 @@ export default function Dashboard() {
         ))}
       </nav>
       <div className="sidebar-bottom">
-        <div className="season-note">
-          <Sparkles size={16} />
-          <strong>Festive, with foresight.</strong>
-          <p>Make room for what comes next.</p>
-          <button onClick={() => navigate("replenishment")}>
-            Explore projections <ArrowRight size={13} />
-          </button>
-        </div>
         <div className="user">
           <span className="avatar">AM</span>
           <div>
@@ -817,23 +810,26 @@ export default function Dashboard() {
           {view !== "settings" && (
             <div className="filters">
               <div className="filter-top">
-                <Select
-                  label={view === "stores" ? "Store" : "Store or warehouse"}
-                  value={filters.location}
-                  onChange={(v) => update({ location: v })}
-                  options={withAvailability("location", [
-                    {
-                      value: "",
-                      label: view === "stores" ? "All stores" : "All locations",
-                    },
-                    ...data.locations
-                      .filter((l) => view !== "stores" || l.type === "store")
-                      .map((l) => ({
-                        value: l.id,
-                        label: l.name,
-                      })),
-                  ])}
-                />
+                {(view !== "events" || expanded || !!filters.location) && (
+                  <Select
+                    label={view === "stores" ? "Store" : "Store or warehouse"}
+                    value={filters.location}
+                    onChange={(v) => update({ location: v })}
+                    options={withAvailability("location", [
+                      {
+                        value: "",
+                        label:
+                          view === "stores" ? "All stores" : "All locations",
+                      },
+                      ...data.locations
+                        .filter((l) => view !== "stores" || l.type === "store")
+                        .map((l) => ({
+                          value: l.id,
+                          label: l.name,
+                        })),
+                    ])}
+                  />
+                )}
                 <Select
                   label="Sales channel"
                   value={filters.channel}

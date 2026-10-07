@@ -186,39 +186,6 @@ nav {
   margin-top: auto;
   padding-top: 40px;
 }
-.season-note {
-  background: #f1ede4;
-  padding: 18px 15px;
-  border-radius: 7px;
-  margin: 0 4px 25px;
-  color: #796044;
-}
-.season-note > svg {
-  margin-bottom: 9px;
-}
-.season-note strong {
-  display: block;
-  font-family: Newsreader, Georgia, serif;
-  font-size: 18px;
-  font-weight: 500;
-  color: #443b2f;
-}
-.season-note p {
-  font-size: 11px;
-  margin: 4px 0 12px;
-  color: #6f675d;
-}
-.season-note button {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  border: 0;
-  background: none;
-  color: #7c572b;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 0;
-}
 .user {
   display: flex;
   align-items: center;
