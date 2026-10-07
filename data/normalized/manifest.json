@@ -32,7 +32,7 @@
     "locations": {
       "path": "locations.jsonl",
       "rows": 6,
-      "sha256": "da708758a4edf1c82cdacd50d59a0686c23af18d06a50fad9e4660d227ecffbd"
+      "sha256": "69049d733a8ca7f560667cbce714dc29d79a674fc3a036068f3112e3a47f5b37"
     },
     "bins": {
       "path": "bins.jsonl",

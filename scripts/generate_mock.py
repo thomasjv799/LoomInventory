@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 AS_OF=date(2026,10,6); START=date(2024,10,6)
 rng=random.Random(799)
 manifest=json.loads((ROOT/'data/image-manifest.json').read_text())
-locations=[{'id':'HO','name':'Head Office','city':'Delhi','type':'warehouse'}]+[{'id':f'S{i+1}','name':name,'city':city,'type':'store'} for i,(name,city) in enumerate([('Delhi · South Extension','Delhi'),('Mumbai · Kala Ghoda','Mumbai'),('Bengaluru · Indiranagar','Bengaluru'),('Jaipur · C-Scheme','Jaipur'),('Hyderabad · Jubilee Hills','Hyderabad')])]
+locations=[{'id':'HO','name':'HO – Central Warehouse','city':'Delhi','type':'warehouse'}]+[{'id':f'S{i+1}','name':name,'city':city,'type':'store'} for i,(name,city) in enumerate([('Delhi · South Extension','Delhi'),('Mumbai · Kala Ghoda','Mumbai'),('Bengaluru · Indiranagar','Bengaluru'),('Jaipur · C-Scheme','Jaipur'),('Hyderabad · Jubilee Hills','Hyderabad')])]
 bins=[{'id':loc['id']+'-MAIN','locationId':loc['id'],'name':'Main stock','excluded':False} for loc in locations]+[{'id':'HO-DISPATCH','locationId':'HO','name':'Dispatch center','excluded':True},{'id':'HO-QC','locationId':'HO','name':'Quality hold','excluded':False}]
 products=[]; variants=[]
 for i,ref in enumerate(manifest):

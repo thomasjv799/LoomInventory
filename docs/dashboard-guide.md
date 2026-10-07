@@ -4,7 +4,7 @@
 
 Inventory Studio helps a merchandising team identify unavailable selling sizes, excess stock, rotation opportunities and matching-dupatta gaps. The prototype answers the fifteen requested business questions using one coherent synthetic ledger. It provides reviewable suggestions; clicking a recommendation does not create a transfer or alter stock.
 
-The snapshot is 6 October 2026. Sales end on 5 October. HO means Head Office / central warehouse and supplies ecommerce. Five fictional stores are Delhi South Extension, Mumbai Kala Ghoda, Bengaluru Indiranagar, Jaipur C-Scheme and Hyderabad Jubilee Hills. These names, operations, quantities and prices do not describe The Loom's actual stores or trading.
+The snapshot is 6 October 2026. Sales end on 5 October. The warehouse is labelled **HO – Central Warehouse** and supplies ecommerce. Five fictional stores are Delhi South Extension, Mumbai Kala Ghoda, Bengaluru Indiranagar, Jaipur C-Scheme and Hyderabad Jubilee Hills. These names, operations, quantities and prices do not describe The Loom's actual stores or trading.
 
 ## Shared controls
 

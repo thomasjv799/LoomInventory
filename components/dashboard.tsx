@@ -279,7 +279,7 @@ export default function Dashboard() {
     if (p.get("channel") === "Ecommerce") p.delete("channel");
     window.history.replaceState(null, "", "/?" + p.toString());
     setToast(
-      "Stores & Rotation covers retail stores. Warehouse filters cleared; use Inventory or Replenishment for HO.",
+      "Stores & Rotation covers retail stores. Warehouse filters cleared; use Inventory or Replenishment for HO – Central Warehouse.",
     );
   }, [view, params]);
   const navigate = (
@@ -408,7 +408,7 @@ export default function Dashboard() {
     },
     {
       id: "hoSupply",
-      header: "HO available",
+      header: "HO – Central Warehouse available",
       accessorFn: (r) =>
         inventoryRows(data!).find(
           (x) => x.variantId === r.variantId && x.locationId === "HO",
@@ -625,7 +625,9 @@ export default function Dashboard() {
           product: r.product,
           where: location(r.locationId),
           signal:
-            r.locationId === "HO" ? "HO size sold out" : "Store size sold out",
+            r.locationId === "HO"
+              ? "HO – Central Warehouse size sold out"
+              : "Store size sold out",
           units: r.sold,
           action:
             r.locationId === "HO"
@@ -1012,7 +1014,7 @@ export default function Dashboard() {
                 <Metric
                   title="Selling size stockouts"
                   value={number(short.length)}
-                  note={hoShort.length + " in Head Office"}
+                  note={hoShort.length + " in HO – Central Warehouse"}
                   icon={TriangleAlert}
                   tone="red"
                   onClick={() =>
@@ -1675,7 +1677,7 @@ export default function Dashboard() {
                   icon={Clock3}
                 />
                 <Metric
-                  title="HO selling size shortages"
+                  title="HO – Central Warehouse size shortages"
                   value={productionCandidates.length.toString()}
                   note="Sizes sold recently with zero availability"
                   icon={TriangleAlert}
@@ -1692,8 +1694,8 @@ export default function Dashboard() {
                 />
               </Panel>
               <Panel
-                title="Head Office shortages"
-                subtitle="HO scope, independent of the selected store; product and size filters apply. Cover-based production candidates."
+                title="HO – Central Warehouse shortages"
+                subtitle="HO – Central Warehouse scope, independent of the selected store; product and size filters apply. Cover-based production candidates."
               >
                 <DataTable
                   data={productionCandidates}
@@ -1712,7 +1714,7 @@ export default function Dashboard() {
                     },
                     { accessorKey: "sold", header: "Sold · 28d" },
                   ]}
-                  label="HO stockout candidates"
+                  label="HO – Central Warehouse stockout candidates"
                   pageSize={4}
                 />
               </Panel>
