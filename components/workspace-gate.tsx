@@ -1,8 +1,8 @@
 "use client";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { authClient } from "@/lib/auth-client";
+import { LogoutButton } from "./logout-button";
 import { useRouter } from "next/navigation";
 export function WorkspaceGate({ children }: { children: ReactNode }) {
   if (process.env.NEXT_PUBLIC_DATA_MODE !== "convex") return children;
@@ -39,15 +39,7 @@ function AuthenticatedGate({ children }: { children: ReactNode }) {
             Your account is signed in. Ask your administrator to grant workspace
             access.
           </p>
-          <button
-            className="login-provider"
-            onClick={async () => {
-              await authClient.signOut();
-              window.location.assign("/login");
-            }}
-          >
-            Sign out
-          </button>
+          <LogoutButton />
         </section>
       </main>
     );

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, ShieldCheck, LoaderCircle } from "lucide-react";
+import { ArrowRight, LoaderCircle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { safeReturnTo } from "@/lib/auth-redirect";
 export function LoginForm() {
@@ -26,9 +26,7 @@ export function LoginForm() {
         errorCallbackURL: "/login?error=signin",
       });
       if (result.error)
-        throw new Error(
-          "Sign-in could not be completed. Your administrator may need to configure this provider.",
-        );
+        throw new Error("Sign-in could not be completed. Please try again.");
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Sign-in failed. Please try again.",
@@ -45,13 +43,7 @@ export function LoginForm() {
         </span>
       </a>
       <section className="login-card" aria-labelledby="login-title">
-        <span className="login-eyebrow">WORKSPACE ACCESS</span>
-        <h1 id="login-title">
-          Sign in to
-          <br />
-          Inventory Studio
-        </h1>
-        <p>Access is managed by your administrator.</p>
+        <h1 id="login-title">Sign in</h1>
         <div className="login-options">
           <button
             disabled={!configured || !!pending}
@@ -111,14 +103,10 @@ export function LoginForm() {
           <div className="login-notice" role="status">
             Sign-in is not configured for this preview.{" "}
             {process.env.NEXT_PUBLIC_DATA_MODE !== "convex" && (
-              <a href="/">Open the demo dashboard</a>
+              <a href="/">Open demo</a>
             )}
           </div>
         )}
-        <div className="login-security">
-          <ShieldCheck size={16} aria-hidden="true" />
-          <span>Your inventory is available only after access is granted.</span>
-        </div>
       </section>
       <footer className="login-footer">The Loom · Inventory Studio</footer>
     </main>

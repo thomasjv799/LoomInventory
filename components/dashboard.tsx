@@ -55,6 +55,7 @@ import {
   exportCsv,
 } from "@/lib/analytics";
 import { Button } from "./ui/button";
+import { LogoutButton } from "./logout-button";
 import {
   Dialog,
   DialogContent,
@@ -803,7 +804,7 @@ export default function Dashboard() {
             <span className="demo-dot" /> <span>Synthetic demo</span>
             <span className="header-divider" />
             <span>06 Oct 2026</span>
-            <span className="avatar small">AM</span>
+            <LogoutButton />
           </div>
         </header>
         <main id="main-content">

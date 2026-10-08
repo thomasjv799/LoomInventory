@@ -256,6 +256,23 @@ nav {
   font-size: 10px;
   color: var(--muted);
 }
+.logout-control {
+  position: relative;
+  flex-shrink: 0;
+}
+.logout-error {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 50;
+  width: 230px;
+  padding: 12px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: #9b3030;
+  font-size: 12px;
+}
 .header-divider {
   height: 14px;
   width: 1px;

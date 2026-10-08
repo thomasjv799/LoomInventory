@@ -91,3 +91,11 @@ This record supersedes earlier statements that there is no backend. The SQL/Fast
 Additional browser check: the add-product drawer fits 375px with no document overflow. Demo reset restored the original catalogue and thresholds through Settings.
 
 Final independent review found six important issues; all were fixed in one regression-tested pass. Eleven reproductions first failed and then passed: complete import manifests; atomic/idempotent publication; receipt quantity, variant, destination, unique movement and totals; reservation/balance overflow; late-catalogue drawer resolution; and full-cohort size ratios. Final suite: **69 Vitest + 22 Python checks passed**, TypeScript passed, and stricter local reconciliation preserved all seeded totals. No findings were deferred.
+
+## Login and logout revision — 8 October 2026
+
+- Added a visible **Log out** button to demo and authenticated dashboards, shared with the access-pending screen. Demo exits to `/login`; authenticated mode awaits Better Auth session revocation before a full navigation clears client caches. Failed requests stay on the page with an accessible error and retry button.
+- Simplified the login heading to **Sign in** and removed the workspace-access eyebrow, administrator paragraph and access-granted footer. The unconfigured-preview notice remains accurate.
+- All 73 Vitest tests, TypeScript and the demo production build passed. Four added tests cover demo exit, session-revocation ordering and both returned and thrown logout errors.
+- Browser verified demo logout, return via Open demo, keyboard focus and Enter activation at 375px without horizontal overflow. Updated login screenshots at 375/768/1024/1440px and added `screenshots/logout-375.jpg`.
+- Live OAuth logout remains subject to the existing provider-configuration deployment gate; no live signed-in session was available for this browser check.

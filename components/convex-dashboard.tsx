@@ -14,7 +14,6 @@ import {
   Download,
   Menu,
   Plus,
-  LogOut,
   RefreshCw,
 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
@@ -22,7 +21,7 @@ import type { Id } from "@/convex/_generated/dataModel";
 import type { Filters, Settings } from "@/lib/types";
 import type { ReportName, ReportRow, ReportEnvelope } from "@/lib/report-types";
 import { ConvexInventoryProvider } from "@/lib/providers/convex";
-import { authClient } from "@/lib/auth-client";
+import { LogoutButton } from "./logout-button";
 import { defaults, exportCsv, money } from "@/lib/analytics";
 import { Button } from "./ui/button";
 import {
@@ -359,20 +358,7 @@ export default function ConvexDashboard() {
                 ? "Synthetic demo"
                 : "Inventory workspace"}
             </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={async () => {
-                setRunId(null);
-                setProductId(null);
-                setOrgId(null);
-                await authClient.signOut();
-                window.location.assign("/login");
-              }}
-            >
-              <LogOut size={14} />
-              Sign out
-            </Button>
+            <LogoutButton />
           </div>
         </header>
         <main id="main-content">
