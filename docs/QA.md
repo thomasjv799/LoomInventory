@@ -119,6 +119,12 @@ Final independent review found six important issues; all were fixed in one regre
 ## Google demo access — 8 October 2026
 
 - Owner requested automatic access for all Google accounts. Enabled viewer enrollment only for the explicit synthetic production organization. Backend validates a current Better Auth session and Google provider record, not a Gmail address or browser-supplied provider/organization.
-- Added component-backed regression checks for idempotent concurrent enrollment, viewer-only permissions, denied catalogue writes, fake identities, password accounts, expired sessions, revocation, existing administrator grants, disabled enrollment and non-synthetic targets. Full suite: 82 tests pass; TypeScript and authenticated build pass.
+- Added component-backed regression checks for idempotent concurrent enrollment, viewer-only permissions, denied catalogue writes, fake identities, password accounts, expired sessions, revocation, existing administrator grants, disabled enrollment and non-synthetic targets. Full suite at initial enrollment delivery: 82 tests pass; TypeScript and authenticated build pass.
 - Sidebar shows the signed-in profile name instead of the organization and role. OAuth initiation on the deployed site returns Google's authorization endpoint with the expected Netlify callback and only email/profile/openid scopes. No client secret or session state was displayed.
 - Google's own Audience setting must permit production users. A completed Google consent/callback with an actual user remains a user-side verification step; automatic enrollment does not bypass Google's test-user restrictions.
+
+## Google/password account linking — 8 October 2026
+
+- Production callback logs identified `account_not_linked` when the Google email matched the privately provisioned, locally unverified password account. An earlier `state_not_found` attempt was separate from this latest callback failure.
+- Regression test exercises the installed Better Auth OAuth user handler against the real Convex test adapter: the verified-email case failed before the policy change and passes afterward. It verifies the same user/session ID, retained administrator membership and updated profile name. An unverified Google email remains rejected without adding an account or changing the profile.
+- All 84 tests and TypeScript pass. Actual Google consent and callback need a fresh user sign-in after deployment; tests do not impersonate a real Google account or bypass provider verification.

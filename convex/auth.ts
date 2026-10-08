@@ -25,6 +25,16 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       minPasswordLength: 12,
       maxPasswordLength: 128,
     },
+    // Password accounts are provisioned privately. A provider-verified matching
+    // email can link them; unverified provider email remains rejected. Keep
+    // trustedProviders unset so provider names never bypass email verification.
+    account: {
+      accountLinking: {
+        enabled: true,
+        requireLocalEmailVerified: false,
+        updateUserInfoOnLink: true,
+      },
+    },
     rateLimit: { enabled: true, storage: "database" },
     socialProviders: {
       ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET

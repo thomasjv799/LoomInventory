@@ -47,6 +47,8 @@ Public Netlify builds require authenticated Convex mode and reject anonymous fix
 
 Set `GOOGLE_OPEN_ACCESS_ORGANIZATION_ID` in Convex to the explicitly chosen synthetic organization. On first sign-in, the workspace gate calls `googleAccess.join`: it validates a current Better Auth session and a linked Google provider record, then creates a viewer membership across active demo locations. It does not accept a target organization from the browser, infer eligibility from an email domain, grant cost/write/admin permissions, upgrade existing memberships or reactivate revoked access. A real-data organization is rejected. Unset this variable to stop new automatic enrollments; existing memberships must be revoked separately.
 
+Google sign-in can link to a privately provisioned password account with the same email even when that local account has not completed email verification. Better Auth still requires the provider to verify the matching email; no provider-name trust bypass is configured. Linking keeps the existing user ID and permissions, copies the Google name/photo, and preserves password sign-in. Public password registration remains disabled. If public password registration is introduced later, revisit this policy and require local email verification before implicit linking.
+
 The sidebar shows the authenticated profile name. Google OAuth must use an External audience published to Production to support accounts beyond the project's allowed test users. Google configuration and workspace authorization are separate controls.
 
 ## Data and import format
