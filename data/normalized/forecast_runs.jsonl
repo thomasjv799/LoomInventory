@@ -1,0 +1,1 @@
+{"as_of":"2026-10-06","assumptions_json":"{\"allocation\":\"largest remainder of observed size mix\",\"baseline_days\":28,\"lost_sales_model\":false,\"seasonal_factors\":\"simulated\"}","id":"DEMO-20261006","org_id":"loom-demo","scope":"network","status":"precomputed_demo"}

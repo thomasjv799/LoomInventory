@@ -14,7 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -218,3 +217,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Frontend prototype
+public/mock-data.json
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+*.tsbuildinfo
+.superpowers/
+.serena/
+
+# Local Convex database and seed resume state
+.convex/

@@ -1,0 +1,8 @@
+{"excluded":0,"id":"HO-MAIN","location_id":"HO","name":"Main stock","org_id":"loom-demo"}
+{"excluded":0,"id":"S1-MAIN","location_id":"S1","name":"Main stock","org_id":"loom-demo"}
+{"excluded":0,"id":"S2-MAIN","location_id":"S2","name":"Main stock","org_id":"loom-demo"}
+{"excluded":0,"id":"S3-MAIN","location_id":"S3","name":"Main stock","org_id":"loom-demo"}
+{"excluded":0,"id":"S4-MAIN","location_id":"S4","name":"Main stock","org_id":"loom-demo"}
+{"excluded":0,"id":"S5-MAIN","location_id":"S5","name":"Main stock","org_id":"loom-demo"}
+{"excluded":1,"id":"HO-DISPATCH","location_id":"HO","name":"Dispatch center","org_id":"loom-demo"}
+{"excluded":0,"id":"HO-QC","location_id":"HO","name":"Quality hold","org_id":"loom-demo"}

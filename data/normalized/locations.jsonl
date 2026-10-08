@@ -1,0 +1,6 @@
+{"city":"Delhi","id":"HO","kind":"warehouse","name":"HO – Central Warehouse","org_id":"loom-demo"}
+{"city":"Delhi","id":"S1","kind":"store","name":"Delhi · South Extension","org_id":"loom-demo"}
+{"city":"Mumbai","id":"S2","kind":"store","name":"Mumbai · Kala Ghoda","org_id":"loom-demo"}
+{"city":"Bengaluru","id":"S3","kind":"store","name":"Bengaluru · Indiranagar","org_id":"loom-demo"}
+{"city":"Jaipur","id":"S4","kind":"store","name":"Jaipur · C-Scheme","org_id":"loom-demo"}
+{"city":"Hyderabad","id":"S5","kind":"store","name":"Hyderabad · Jubilee Hills","org_id":"loom-demo"}

@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "synthetic": true,
+  "seed": 799,
+  "as_of": "2026-10-06",
+  "money_unit": "INR paise; 100 minor units = 1 rupee",
+  "load_order": [
+    "organizations",
+    "locations",
+    "bins",
+    "products",
+    "product_images",
+    "variants",
+    "transfers",
+    "inventory_ledger",
+    "transfer_receipts",
+    "sales_orders",
+    "sales_lines",
+    "reservations",
+    "matching_relationships",
+    "events",
+    "influencer_activity",
+    "forecast_runs",
+    "forecast_values"
+  ],
+  "files": {
+    "organizations": {
+      "path": "organizations.jsonl",
+      "rows": 1,
+      "sha256": "9dfd8ebd797d368afe54971369569844f29d4a1a6d2621ffebdc4e73bbebb9cb"
+    },
+    "locations": {
+      "path": "locations.jsonl",
+      "rows": 6,
+      "sha256": "69049d733a8ca7f560667cbce714dc29d79a674fc3a036068f3112e3a47f5b37"
+    },
+    "bins": {
+      "path": "bins.jsonl",
+      "rows": 8,
+      "sha256": "49710eda5cecf2e65a09f4366a0bd93bb95936f33b1ac4dc57cd2f5507b27a5d"
+    },
+    "products": {
+      "path": "products.jsonl",
+      "rows": 30,
+      "sha256": "a3734c1545d85f4aadfc7625719b631ff8094d2132377372d61066f645f3f12a"
+    },
+    "product_images": {
+      "path": "product_images.jsonl",
+      "rows": 30,
+      "sha256": "ca645dbe978b5a50d7d1db4a56e46f4dc90dfa1f17317a51d71e0343ce7c0ea9"
+    },
+    "variants": {
+      "path": "variants.jsonl",
+      "rows": 150,
+      "sha256": "41656ce849dd360f52b490855409213d465c1e05b709aa933f92b4a9c63e7da7"
+    },
+    "transfers": {
+      "path": "transfers.jsonl",
+      "rows": 2800,
+      "sha256": "987ea4ce996d155267e11d86c61bdf99cc7de74b93fadb8f5ce4b87b883fd11e"
+    },
+    "inventory_ledger": {
+      "path": "inventory_ledger.jsonl",
+      "rows": 16853,
+      "sha256": "fb7761001af2c7e872d17324dfb74e63c8435f331c3f53b3fb7ff6f2529c3e9e"
+    },
+    "transfer_receipts": {
+      "path": "transfer_receipts.jsonl",
+      "rows": 2793,
+      "sha256": "1f815b0d7874580b9b026e4050d1595c53e5f27efe640e5837e413dc1a634406"
+    },
+    "sales_orders": {
+      "path": "sales_orders.jsonl",
+      "rows": 7425,
+      "sha256": "0bf0ad2917b9efde93fe566b8cc9da43c8a7032b8ef2b018d349e9251c9f295e"
+    },
+    "sales_lines": {
+      "path": "sales_lines.jsonl",
+      "rows": 7471,
+      "sha256": "d65554eba1fbb4b8e9754d9ece9dfa738ffe940746a5bf9782bb5b597536055c"
+    },
+    "reservations": {
+      "path": "reservations.jsonl",
+      "rows": 2,
+      "sha256": "ab51f0bfd106b9512e71c709bda7b6c60b5d3f45f114a51a316c5728833b833e"
+    },
+    "matching_relationships": {
+      "path": "matching_relationships.jsonl",
+      "rows": 8,
+      "sha256": "9fb23e46622665e2e9e82253dfc7677d9f581e5ed5c315820f38aa2ef2fc1221"
+    },
+    "events": {
+      "path": "events.jsonl",
+      "rows": 8,
+      "sha256": "58c30998057311eeca7d4e7e43e63fab94c88c06b08a508c96173fdcac251564"
+    },
+    "influencer_activity": {
+      "path": "influencer_activity.jsonl",
+      "rows": 34,
+      "sha256": "45fcccdfd8a794071d9737537e84c0fe0e550e579dfca3815e64473f2c577656"
+    },
+    "forecast_runs": {
+      "path": "forecast_runs.jsonl",
+      "rows": 1,
+      "sha256": "78dc4954a332dd7159bf5df74eb00f9a416c1b04cb0c0230bcd4da526cfad71a"
+    },
+    "forecast_values": {
+      "path": "forecast_values.jsonl",
+      "rows": 450,
+      "sha256": "6bf344550b25f47b1b405b5f2aadd4c97f6277bb4f323916e4a71ccfc87027c0"
+    }
+  }
+}

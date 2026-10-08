@@ -1,0 +1,860 @@
+{
+  "organizations": {
+    "columns": {
+      "id": "TEXT NOT NULL",
+      "name": "TEXT NOT NULL",
+      "currency": "TEXT NOT NULL",
+      "timezone": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "id"
+    ],
+    "foreign_keys": {},
+    "composite_foreign_keys": [],
+    "checks": [],
+    "unique": []
+  },
+  "locations": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "name": "TEXT NOT NULL",
+      "city": "TEXT NOT NULL",
+      "kind": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {},
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "kind IN ('warehouse','store')"
+    ],
+    "unique": []
+  },
+  "bins": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "location_id": "TEXT NOT NULL",
+      "name": "TEXT NOT NULL",
+      "excluded": "INTEGER NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "location_id": "locations"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "location_id"
+        ],
+        "table": "locations",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "excluded IN (0,1)"
+    ],
+    "unique": [
+      "id, location_id"
+    ]
+  },
+  "products": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "sku": "TEXT NOT NULL",
+      "name": "TEXT NOT NULL",
+      "category": "TEXT NOT NULL",
+      "color": "TEXT NOT NULL",
+      "fabric": "TEXT NOT NULL",
+      "craft": "TEXT NOT NULL",
+      "style": "TEXT NOT NULL",
+      "collection": "TEXT NOT NULL",
+      "season": "TEXT NOT NULL",
+      "kurta_length_inches": "INTEGER NOT NULL",
+      "launch_date": "DATE NOT NULL",
+      "cost_minor": "BIGINT NOT NULL",
+      "suggested_mrp_minor": "BIGINT NOT NULL",
+      "provenance_json": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {},
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "cost_minor >= 0",
+      "suggested_mrp_minor >= 0"
+    ],
+    "unique": [
+      "sku"
+    ]
+  },
+  "product_images": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "product_id": "TEXT NOT NULL",
+      "url": "TEXT NOT NULL",
+      "source_product_url": "TEXT NOT NULL",
+      "alt": "TEXT NOT NULL",
+      "width": "INTEGER",
+      "height": "INTEGER",
+      "verified_on": "DATE NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "product_id": "products"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "product_id"
+        ],
+        "table": "products",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "width IS NULL OR width > 0",
+      "height IS NULL OR height > 0"
+    ],
+    "unique": []
+  },
+  "variants": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "product_id": "TEXT NOT NULL",
+      "sku": "TEXT NOT NULL",
+      "size": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "product_id": "products"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "product_id"
+        ],
+        "table": "products",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [],
+    "unique": [
+      "sku",
+      "product_id, size"
+    ]
+  },
+  "transfers": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "variant_id": "TEXT NOT NULL",
+      "source_id": "TEXT NOT NULL",
+      "destination_id": "TEXT NOT NULL",
+      "dispatched_qty": "INTEGER NOT NULL",
+      "dispatch_date": "DATE NOT NULL",
+      "eta": "DATE NOT NULL",
+      "owner_org_id": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "variant_id": "variants",
+      "source_id": "locations",
+      "destination_id": "locations"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "variant_id"
+        ],
+        "table": "variants",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "source_id"
+        ],
+        "table": "locations",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "destination_id"
+        ],
+        "table": "locations",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "dispatched_qty > 0",
+      "source_id <> destination_id",
+      "owner_org_id = org_id"
+    ],
+    "unique": []
+  },
+  "inventory_ledger": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "variant_id": "TEXT NOT NULL",
+      "location_id": "TEXT NOT NULL",
+      "bin_id": "TEXT NOT NULL",
+      "condition": "TEXT NOT NULL",
+      "quantity_delta": "INTEGER NOT NULL",
+      "effective_date": "DATE NOT NULL",
+      "reason": "TEXT NOT NULL",
+      "source_reference": "TEXT",
+      "is_opening": "INTEGER NOT NULL",
+      "transfer_id": "TEXT",
+      "owner_org_id": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "variant_id": "variants",
+      "location_id": "locations",
+      "bin_id": "bins",
+      "transfer_id": "transfers"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "variant_id"
+        ],
+        "table": "variants",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "location_id"
+        ],
+        "table": "locations",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "bin_id"
+        ],
+        "table": "bins",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "transfer_id"
+        ],
+        "table": "transfers",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "bin_id",
+          "location_id"
+        ],
+        "table": "bins",
+        "references": [
+          "org_id",
+          "id",
+          "location_id"
+        ]
+      }
+    ],
+    "checks": [
+      "condition IN ('sellable','quarantine')",
+      "is_opening IN (0,1)",
+      "owner_org_id = org_id"
+    ],
+    "unique": []
+  },
+  "transfer_receipts": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "transfer_id": "TEXT NOT NULL",
+      "quantity": "INTEGER NOT NULL",
+      "received_date": "DATE NOT NULL",
+      "movement_id": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "transfer_id": "transfers",
+      "movement_id": "inventory_ledger"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "transfer_id"
+        ],
+        "table": "transfers",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "movement_id"
+        ],
+        "table": "inventory_ledger",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "quantity > 0"
+    ],
+    "unique": [
+      "movement_id"
+    ]
+  },
+  "sales_orders": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "source_reference": "TEXT NOT NULL",
+      "location_id": "TEXT NOT NULL",
+      "channel": "TEXT NOT NULL",
+      "sale_date": "DATE NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "location_id": "locations"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "location_id"
+        ],
+        "table": "locations",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "channel IN ('Ecommerce','Store')"
+    ],
+    "unique": []
+  },
+  "sales_lines": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "order_id": "TEXT NOT NULL",
+      "variant_id": "TEXT NOT NULL",
+      "quantity": "INTEGER NOT NULL",
+      "transaction_mrp_minor": "BIGINT",
+      "net_line_value_minor": "BIGINT",
+      "movement_id": "TEXT NOT NULL",
+      "matching_status": "TEXT NOT NULL",
+      "matching_dupatta_id": "TEXT"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "order_id": "sales_orders",
+      "variant_id": "variants",
+      "movement_id": "inventory_ledger",
+      "matching_dupatta_id": "products"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "order_id"
+        ],
+        "table": "sales_orders",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "variant_id"
+        ],
+        "table": "variants",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "movement_id"
+        ],
+        "table": "inventory_ledger",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "matching_dupatta_id"
+        ],
+        "table": "products",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "quantity > 0",
+      "transaction_mrp_minor IS NULL OR transaction_mrp_minor >= 0",
+      "net_line_value_minor IS NULL OR net_line_value_minor >= 0",
+      "matching_status IN ('with','without','unknown')"
+    ],
+    "unique": [
+      "movement_id"
+    ]
+  },
+  "reservations": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "variant_id": "TEXT NOT NULL",
+      "location_id": "TEXT NOT NULL",
+      "quantity": "INTEGER NOT NULL",
+      "as_of": "DATE NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "variant_id": "variants",
+      "location_id": "locations"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "variant_id"
+        ],
+        "table": "variants",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "location_id"
+        ],
+        "table": "locations",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "quantity > 0"
+    ],
+    "unique": []
+  },
+  "matching_relationships": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "outfit_id": "TEXT NOT NULL",
+      "dupatta_id": "TEXT NOT NULL",
+      "ratio": "INTEGER NOT NULL",
+      "description": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "outfit_id": "products",
+      "dupatta_id": "products"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "outfit_id"
+        ],
+        "table": "products",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "dupatta_id"
+        ],
+        "table": "products",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "ratio > 0",
+      "outfit_id <> dupatta_id"
+    ],
+    "unique": []
+  },
+  "events": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "name": "TEXT NOT NULL",
+      "start_date": "DATE NOT NULL",
+      "end_date": "DATE NOT NULL",
+      "kind": "TEXT NOT NULL",
+      "multiplier": "NUMERIC NOT NULL",
+      "source_url": "TEXT",
+      "note": "TEXT"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {},
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "start_date <= end_date",
+      "multiplier > 0"
+    ],
+    "unique": []
+  },
+  "influencer_activity": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "name": "TEXT NOT NULL",
+      "kind": "TEXT NOT NULL",
+      "product_id": "TEXT NOT NULL",
+      "activity_date": "DATE NOT NULL",
+      "channel": "TEXT NOT NULL",
+      "note": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "product_id": "products"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "product_id"
+        ],
+        "table": "products",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [],
+    "unique": []
+  },
+  "forecast_runs": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "as_of": "DATE NOT NULL",
+      "scope": "TEXT NOT NULL",
+      "status": "TEXT NOT NULL",
+      "assumptions_json": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {},
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [],
+    "unique": []
+  },
+  "forecast_values": {
+    "columns": {
+      "org_id": "TEXT NOT NULL",
+      "id": "TEXT NOT NULL",
+      "run_id": "TEXT NOT NULL",
+      "variant_id": "TEXT NOT NULL",
+      "month": "TEXT NOT NULL",
+      "units": "INTEGER NOT NULL",
+      "factor": "NUMERIC NOT NULL",
+      "method": "TEXT NOT NULL"
+    },
+    "primary_key": [
+      "org_id",
+      "id"
+    ],
+    "foreign_keys": {
+      "run_id": "forecast_runs",
+      "variant_id": "variants"
+    },
+    "composite_foreign_keys": [
+      {
+        "columns": [
+          "org_id"
+        ],
+        "table": "organizations",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "run_id"
+        ],
+        "table": "forecast_runs",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "org_id",
+          "variant_id"
+        ],
+        "table": "variants",
+        "references": [
+          "org_id",
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "units >= 0",
+      "factor > 0"
+    ],
+    "unique": [
+      "run_id, variant_id, month"
+    ]
+  }
+}
