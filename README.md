@@ -1,6 +1,6 @@
 # The Loom · Inventory Studio
 
-A Next.js/TypeScript inventory dashboard with a Convex database, scoped report and stock APIs, and Better Auth Google/Microsoft sign-in. All eight sections support explicit local demo mode; authenticated mode uses authorized, paginated backend reports. **All committed business data is simulated.** Provider credentials and cloud deployment remain external setup steps.
+A Next.js/TypeScript inventory dashboard with a Convex database, scoped report and stock APIs, and Better Auth email/password and Google/Microsoft sign-in. All eight sections support explicit local demo mode; public deployments require authenticated mode with authorized, paginated backend reports. **All committed business data is simulated.** Account provisioning, provider credentials and cloud deployment remain external setup steps.
 
 See [backend setup](docs/backend-setup.md), [deployment runbook](docs/deployment-runbook.md) and [implemented HTTP contract](docs/api/convex-openapi.json). Add product creates a style and its sizes with zero stock; receipts are separate stock operations.
 
@@ -39,7 +39,7 @@ The demo snapshot is **6 October 2026**. Historical sales dates end on 5 October
 ## Data and image references
 
 - `scripts/generate_mock.py`: deterministic seed 799; movement-led accounting.
-- `data/mock-data.json` and `public/mock-data.json`: identical fixtures consumed through an asynchronous provider.
+- `data/mock-data.json`: committed source fixture. Local demo builds generate an ignored `public/mock-data.json` for the asynchronous fixture provider; authenticated builds exclude it.
 - `data/inputs/`: eleven logical input projections, generated from the same ledger.
 - `data/image-manifest.json`: 30 verified public primary image references, dimensions, alt text, source product URLs and attribute provenance. Secondary URLs are null where no gallery reference was verified. Remote images are lazy loaded with fixed dimensions and a stable fallback.
 - `lib/types.ts`, `lib/provider.ts`: shared interfaces and asynchronous fixture provider for later replacement by FastAPI.

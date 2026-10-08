@@ -1884,6 +1884,46 @@ tbody tr:hover {
   color: #626b70;
   line-height: 1.65;
 }
+.login-credentials {
+  display: grid;
+  gap: 10px;
+  margin-top: 28px;
+  font-size: 13px;
+}
+.login-credentials input {
+  min-height: 46px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dcdedb;
+  border-radius: 4px;
+  background: #fff;
+}
+.login-credentials label:not(:first-child) {
+  margin-top: 8px;
+}
+.login-submit {
+  min-height: 46px;
+  margin-top: 10px;
+  background: #17252d;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.login-submit:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+.login-submit:focus-visible,
+.login-credentials input:focus-visible {
+  outline: 2px solid #946a35;
+  outline-offset: 3px;
+}
+.login-or {
+  text-align: center;
+  color: #626b70;
+  font-size: 12px;
+  margin-top: 22px;
+}
 .login-options {
   display: grid;
   gap: 12px;

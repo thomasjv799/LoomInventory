@@ -99,3 +99,11 @@ Final independent review found six important issues; all were fixed in one regre
 - All 73 Vitest tests, TypeScript and the demo production build passed. Four added tests cover demo exit, session-revocation ordering and both returned and thrown logout errors.
 - Browser verified demo logout, return via Open demo, keyboard focus and Enter activation at 375px without horizontal overflow. Updated login screenshots at 375/768/1024/1440px and added `screenshots/logout-375.jpg`.
 - Live OAuth logout remains subject to the existing provider-configuration deployment gate; no live signed-in session was available for this browser check.
+
+## Password-protected preview — 8 October 2026
+
+- Removed Open demo from login and added email/password sign-in. Initial credentials are provisioned through an internal Convex command, hashed by Better Auth and granted workspace access separately. No public registration, default password in source, password-returning API or automatic administrator assignment.
+- Local account provisioned into the running Convex database. Browser verified successful password sign-in, ready inventory reports, real session logout and redirect to login when reopening `/` without a session. Bootstrap environment variables were removed after provisioning; the private credentials file is ignored by Git.
+- Actual HTTP checks: public password signup 400, incorrect password 401, unauthenticated inventory API 401 and public fixture URL 404. Google/Microsoft callbacks remain unconfigured and unverified; password sign-in does not require those credentials.
+- Netlify anonymous-demo deployments and public password environment variables fail validation. Database-backed authentication rate limiting is enabled. Login screenshots updated at 375/768/1024/1440px; no credentials appear in them.
+- Final suite: 76 Vitest tests pass. TypeScript and authenticated production build pass.

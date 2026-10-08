@@ -4,6 +4,8 @@ Source configuration is supplied; no cloud project or public deployment was crea
 
 ## Configure the environments
 
+Public deployments require `NEXT_PUBLIC_DATA_MODE=convex`; Netlify fixture-mode builds are rejected. Provision an initial email/password account through the owner-only procedure in [backend setup](backend-setup.md#create-the-initial-password-account). Public registration and the login demo link are disabled. Production credentials are distinct from the private local review account. Database-backed Better Auth rate limiting applies to authentication requests.
+
 Use separate Convex development, preview and production deployments. Use Netlify's supported Next.js runtime; keep the authentication/API server routes enabled. Do not use static export. `netlify.toml` runs the official Convex deploy-and-build pattern and explicitly supplies `NEXT_PUBLIC_CONVEX_URL` to the frontend build.
 
 In **Convex**, configure `SITE_URL`, `BETTER_AUTH_SECRET` (at least 32 random characters), `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, optional `MICROSOFT_TENANT_ID`, and `DEPLOYMENT_ENV`. Keep `ALLOW_SYNTHETIC_SEED=false` for production unless explicitly loading an isolated demonstration. Never put provider secrets into public variables.

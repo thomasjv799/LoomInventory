@@ -4,6 +4,8 @@ export function validateEnvironment(env: Record<string, string | undefined>) {
     throw new Error("NEXT_PUBLIC_DATA_MODE must be demo or convex");
   if (env.NETLIFY && !env.NEXT_PUBLIC_DATA_MODE)
     throw new Error("Hosted builds require explicit NEXT_PUBLIC_DATA_MODE");
+  if (env.NETLIFY && mode !== "convex")
+    throw new Error("Public deployments require authenticated Convex mode");
   if (mode === "convex") {
     for (const key of [
       "NEXT_PUBLIC_CONVEX_URL",
@@ -25,7 +27,7 @@ export function validateEnvironment(env: Record<string, string | undefined>) {
   for (const key of Object.keys(env))
     if (
       key.startsWith("NEXT_PUBLIC_") &&
-      /SECRET|DEPLOY_KEY|CLIENT_SECRET/.test(key)
+      /SECRET|DEPLOY_KEY|PASSWORD|PRIVATE_KEY/.test(key)
     )
       throw new Error("Secret cannot be public");
   return { mode: mode as "demo" | "convex" };

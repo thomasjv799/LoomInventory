@@ -1,6 +1,6 @@
 # Convex backend setup
 
-The implemented backend uses TypeScript on Convex and Better Auth with Google/Microsoft social sign-in. Next.js runs on Netlify. The earlier FastAPI/PostgreSQL proposal remains a reference; it is not another running service.
+The implemented backend uses TypeScript on Convex and Better Auth with email/password and Google/Microsoft social sign-in. Next.js runs on Netlify. The earlier FastAPI/PostgreSQL proposal remains a reference; it is not another running service.
 
 ## Run locally
 
@@ -8,7 +8,7 @@ The implemented backend uses TypeScript on Convex and Better Auth with Google/Mi
 2. Copy `.env.example` to `.env.local`, keeping `NEXT_PUBLIC_DATA_MODE=demo` to review the original dashboard and `/login` without credentials. Run `npm run dev`.
 3. For a database, run `npm run convex:dev`. Without a configured deployment, the current CLI supports anonymous local development; it generates real files in `convex/_generated/` and stores local state outside Git. Keep this process running.
 4. Set Convex `DEPLOYMENT_ENV=development` explicitly (`npx convex env set DEPLOYMENT_ENV development`). Run `npm run seed:convex` to stage the committed synthetic normalized package. Repeating the command resumes the same local version/chunks. Run `npm run seed:convex -- --activate` explicitly to reconcile and activate; an existing ready version is preserved.
-5. Configure `SITE_URL` and a strong `BETTER_AUTH_SECRET` in the Convex deployment. Set Google/Microsoft OAuth credentials there. Switch frontend mode to `convex`, fill all three public URLs and restart Next.js.
+5. Configure `SITE_URL` and a strong `BETTER_AUTH_SECRET` in the Convex deployment. Google/Microsoft OAuth credentials are optional when using password sign-in. Switch frontend mode to `convex`, fill all three public URLs and restart Next.js.
 6. Sign in, then grant the resulting stable auth user ID through the deployment-owner-only `bootstrap:firstAdministrator` command with the explicit organization ID. New sign-ins have no inventory access by default. Subsequent membership changes use the administrator-only function.
 
 The deployment owner can bootstrap the first signed-in administrator after activation:
@@ -27,7 +27,21 @@ Use **Add product** to enter the SKU, attributes, cost, suggested MRP, applicabl
 
 Receive production/opening stock through `operations.receiveStock`, providing organization, variant, location, bin, quantity, business date and a unique idempotency key. A later sale records its own transaction MRP and actual net line value, then deducts stock once. Suggested MRP is never substituted for actual selling price.
 
-Google/Microsoft login is social sign-in; this implementation does not offer company-managed SAML connections, password login or public administrator registration. Memberships use auth user IDs, not email-domain rules.
+Google/Microsoft login is social sign-in; this implementation does not offer company-managed SAML connections or public administrator registration. Memberships use auth user IDs, not email-domain rules. Public email/password registration is disabled.
+
+## Create the initial password account
+
+There are no hard-coded or publicly displayed default credentials. Set `INITIAL_ACCOUNT_EMAIL` and a strong, unique `INITIAL_ACCOUNT_PASSWORD` (12–128 characters) in the **Convex environment**, then run the deployment-owner command:
+
+```sh
+npx convex run initialAccount:create '{}'
+```
+
+It returns the stable `authUserId`, never the password. Grant that ID access to the explicit organization using `bootstrap:firstAdministrator` above. Provisioning alone grants no inventory access. The password is stored as a Better Auth hash, and rerunning provisioning leaves an existing credential and its permissions unchanged. An existing non-password account is rejected to prevent accidental account takeover. Remove both initial-account environment variables after creation. Passwords must never be placed in `NEXT_PUBLIC_*`, Git, screenshots or command examples.
+
+The local review account is `admin@inventory.local`; its generated password is in the ignored, owner-readable `.env.initial-account.local`. This account exists only in the local database. Create separate credentials in the production deployment before publishing. Individual staff accounts should replace a shared review account when real users are onboarded.
+
+Public Netlify builds require authenticated Convex mode and reject anonymous fixture mode. The login page has no demo bypass. Local fixture mode remains available only as an explicit development tool; the review preview now runs in authenticated mode.
 
 ## Data and import format
 

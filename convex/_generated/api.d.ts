@@ -22,6 +22,7 @@ import type * as domain_validation from "../domain/validation.js";
 import type * as exports from "../exports.js";
 import type * as http from "../http.js";
 import type * as imports from "../imports.js";
+import type * as initialAccount from "../initialAccount.js";
 import type * as inventory from "../inventory.js";
 import type * as memberships from "../memberships.js";
 import type * as operations from "../operations.js";
@@ -51,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   exports: typeof exports;
   http: typeof http;
   imports: typeof imports;
+  initialAccount: typeof initialAccount;
   inventory: typeof inventory;
   memberships: typeof memberships;
   operations: typeof operations;

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -7,6 +7,8 @@ import { safeReturnTo } from "@/lib/auth-redirect";
 export function LoginForm() {
   const params = useSearchParams();
   const [pending, setPending] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(
     params.get("error")
       ? "Sign-in could not be completed. Please try again."
@@ -16,6 +18,32 @@ export function LoginForm() {
     process.env.NEXT_PUBLIC_DATA_MODE === "convex" &&
     !!process.env.NEXT_PUBLIC_CONVEX_URL &&
     !!process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
+  async function signInWithPassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!configured || pending) return;
+    setPending("password");
+    setError(null);
+    try {
+      const result = await authClient.signIn.email({
+        email: email.trim(),
+        password,
+      });
+      if (result.error) {
+        setPassword("");
+        setError(
+          "Sign-in failed. Check your email and password, then try again.",
+        );
+        setPending(null);
+        return;
+      }
+      setPassword("");
+      window.location.replace(safeReturnTo(params.get("returnTo")));
+    } catch {
+      setPassword("");
+      setError("Could not connect. Please try again.");
+      setPending(null);
+    }
+  }
   async function signIn(provider: "google" | "microsoft") {
     setError(null);
     setPending(provider);
@@ -44,6 +72,41 @@ export function LoginForm() {
       </a>
       <section className="login-card" aria-labelledby="login-title">
         <h1 id="login-title">Sign in</h1>
+        <form className="login-credentials" onSubmit={signInWithPassword}>
+          <label htmlFor="login-email">Email</label>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            autoComplete="username"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            disabled={!configured || !!pending}
+          />
+          <label htmlFor="login-password">Password</label>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            maxLength={128}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            disabled={!configured || !!pending}
+          />
+          <button
+            className="login-submit"
+            type="submit"
+            disabled={!configured || !!pending}
+          >
+            {pending === "password" ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
+        <div className="login-or" aria-hidden="true">
+          or
+        </div>
         <div className="login-options">
           <button
             disabled={!configured || !!pending}
@@ -101,10 +164,7 @@ export function LoginForm() {
         )}
         {!configured && (
           <div className="login-notice" role="status">
-            Sign-in is not configured for this preview.{" "}
-            {process.env.NEXT_PUBLIC_DATA_MODE !== "convex" && (
-              <a href="/">Open demo</a>
-            )}
+            Sign-in is not configured yet.
           </div>
         )}
       </section>

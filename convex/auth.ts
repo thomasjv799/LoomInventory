@@ -19,7 +19,13 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     secret: process.env.BETTER_AUTH_SECRET,
     database: authComponent.adapter(ctx),
     trustedOrigins: process.env.SITE_URL ? [process.env.SITE_URL] : [],
-    emailAndPassword: { enabled: false },
+    emailAndPassword: {
+      enabled: true,
+      disableSignUp: true,
+      minPasswordLength: 12,
+      maxPasswordLength: 128,
+    },
+    rateLimit: { enabled: true, storage: "database" },
     socialProviders: {
       ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
         ? {
