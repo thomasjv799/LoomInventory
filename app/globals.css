@@ -186,6 +186,31 @@ nav {
   margin-top: auto;
   padding-top: 40px;
 }
+.sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  border-top: 1px solid var(--line);
+  padding: 14px 4px 2px;
+}
+.navigation-panel .sidebar-inner {
+  height: auto;
+}
+.navigation-panel .sidebar-bottom {
+  margin-top: 24px;
+  padding-top: 0;
+}
+.sidebar-profile-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #526068;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
 .user {
   display: flex;
   align-items: center;

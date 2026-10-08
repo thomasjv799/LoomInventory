@@ -88,6 +88,16 @@ export default function ConvexDashboard() {
     router = useRouter(),
     client = useConvex(),
     me = useQuery(api.memberships.me, {});
+  const profileName = me?.user.name?.trim() || "";
+  const nameParts = profileName.split(/\s+/).filter(Boolean);
+  const profileInitials = [
+    nameParts[0],
+    nameParts.length > 1 ? nameParts.at(-1) : undefined,
+  ]
+    .filter(Boolean)
+    .map((part) => Array.from(part!)[0])
+    .join("")
+    .toLocaleUpperCase();
   const [orgId, setOrgId] = useState<Id<"organizations"> | null>(null),
     [mobile, setMobile] = useState(false),
     [create, setCreate] = useState(false),
@@ -296,7 +306,16 @@ export default function ConvexDashboard() {
         ))}
       </nav>
       <div className="sidebar-bottom">
-        <span>{me?.user.name}</span>
+        {profileName && (
+          <div className="sidebar-profile">
+            <span className="avatar small" aria-hidden="true">
+              {profileInitials}
+            </span>
+            <span className="sidebar-profile-name" title={profileName}>
+              {profileName}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -864,7 +883,10 @@ export default function ConvexDashboard() {
         </main>
       </div>
       <Dialog open={mobile} onOpenChange={setMobile}>
-        <DialogContent onCloseAutoFocus={restoreFocus}>
+        <DialogContent
+          className="navigation-panel"
+          onCloseAutoFocus={restoreFocus}
+        >
           <DialogTitle>Navigation</DialogTitle>
           <DialogDescription>Choose an inventory section.</DialogDescription>
           {nav}
