@@ -44,7 +44,7 @@ export function LoginForm() {
       setPending(null);
     }
   }
-  async function signIn(provider: "google" | "microsoft") {
+  async function signIn(provider: "google") {
     setError(null);
     setPending(provider);
     try {
@@ -133,24 +133,6 @@ export function LoginForm() {
             </svg>
             <span>Continue with Google</span>
             {pending === "google" ? (
-              <LoaderCircle className="login-spinner" size={18} />
-            ) : (
-              <ArrowRight size={18} />
-            )}
-          </button>
-          <button
-            disabled={!configured || !!pending}
-            onClick={() => signIn("microsoft")}
-            className="login-provider"
-          >
-            <svg width="20" height="20" viewBox="0 0 21 21" aria-hidden="true">
-              <path fill="#f25022" d="M0 0h10v10H0z" />
-              <path fill="#7fba00" d="M11 0h10v10H11z" />
-              <path fill="#00a4ef" d="M0 11h10v10H0z" />
-              <path fill="#ffb900" d="M11 11h10v10H11z" />
-            </svg>
-            <span>Continue with Microsoft</span>
-            {pending === "microsoft" ? (
               <LoaderCircle className="login-spinner" size={18} />
             ) : (
               <ArrowRight size={18} />
