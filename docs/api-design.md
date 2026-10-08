@@ -1,5 +1,9 @@
 # Proposed FastAPI API contract
 
+**Historical proposal, superseded on 8 October 2026.** The running source now uses Convex/TypeScript and Better Auth. The SQL/FastAPI/Supabase material below is retained for reference, not an additional deployed service. Use [backend setup](backend-setup.md), [runtime schema](../convex/schema.ts), [implemented API](api/convex-openapi.json) and [deployment runbook](deployment-runbook.md) for current work. The production follow-ups are scalable incremental report aggregates, live provider/deployment smoke tests, load tests, backups and restore drills.
+
+## Original proposal
+
 **Design only.** [openapi.json](api/openapi.json) is an OpenAPI 3.1 artifact for the next milestone; none of its routes are currently running. The Next.js prototype still fetches `/mock-data.json`. Regenerate the contract with `python3 scripts/build_api_contract.py` after regenerating the normalized data contract.
 
 Use `/api/v1`, typed Python request/response models and JSON envelopes. Generate runtime OpenAPI from those models later and compare it with this design contract in CI. FastAPI's [response-model documentation](https://fastapi.tiangolo.com/tutorial/response-model/) describes how typed responses validate and filter output. This contract is our proposed design, not an API provided by The Loom.

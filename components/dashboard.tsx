@@ -65,6 +65,7 @@ import { facetCounts, type Facet } from "../lib/filter-options";
 import { ProductImage } from "./product-image";
 import { DataTable } from "./data-table";
 import { ReportChart } from "./charts";
+import { ProductCreateDrawer } from "./product-create-drawer";
 const views = [
   { id: "overview", name: "Overview", icon: LayoutDashboard },
   { id: "inventory", name: "Inventory", icon: Boxes },
@@ -182,6 +183,7 @@ export default function Dashboard() {
   const params = useSearchParams();
   const raw = params.get("view") || "overview";
   const view = views.some((v) => v.id === raw) ? raw : "overview";
+  const [createProduct, setCreateProduct] = useState(false);
   const [data, setData] = useState<Dataset | null>(null),
     [error, setError] = useState(""),
     [retry, setRetry] = useState(0);
@@ -810,6 +812,15 @@ export default function Dashboard() {
               <h1>{titles[view][0]}</h1>
               <p>{titles[view][1]}</p>
             </div>
+            <Button
+              onClick={() => {
+                rememberFocus(document.activeElement as HTMLElement);
+                setCreateProduct(true);
+              }}
+            >
+              <PackagePlus size={15} />
+              Add product
+            </Button>
             {view !== "settings" && (
               <Button onClick={exportRows}>
                 <Download size={15} />
@@ -2511,13 +2522,14 @@ export default function Dashboard() {
                   settings.
                 </p>
                 <Button
-                  onClick={() => {
+                  onClick={async () => {
+                    setData(await fixtureProvider.reset());
                     setSettings({ ...defaults });
-                    setToast("Demo settings restored.");
+                    setToast("Demo catalogue and settings restored.");
                   }}
                 >
                   <RotateCcw size={15} />
-                  Reset demo settings
+                  Reset demo data & settings
                 </Button>
               </div>
               <Panel
@@ -2525,11 +2537,11 @@ export default function Dashboard() {
                 subtitle="30 referenced products · 150 variants · 6 locations · 24 months of synthetic history"
               >
                 <p className="panel-paragraph">
-                  The asynchronous fixture provider can later be replaced by
-                  FastAPI. This milestone runs locally without backend
-                  credentials. Pricing, costs, stock, sales, store names and
-                  matching relationships are simulated. Public product names,
-                  imagery and catalogue attributes remain source referenced.
+                  This demo runs locally without backend credentials. Switch to
+                  authenticated mode to use the Convex database and scoped APIs.
+                  Pricing, costs, stock, sales, store names and matching
+                  relationships are simulated. Public product names, imagery and
+                  catalogue attributes remain source referenced.
                 </p>
               </Panel>
             </>
@@ -2543,6 +2555,18 @@ export default function Dashboard() {
           </footer>
         </main>
       </div>
+      <ProductCreateDrawer
+        open={createProduct}
+        onOpenChange={setCreateProduct}
+        provider={fixtureProvider}
+        onCloseAutoFocus={restore}
+        onCreated={async () => {
+          setData(await fixtureProvider.load());
+          setToast(
+            "Product created with zero stock. This catalogue change is stored in this browser only.",
+          );
+        }}
+      />
       <Dialog open={mobile} onOpenChange={setMobile}>
         <DialogContent className="mobile-nav" onCloseAutoFocus={restore}>
           <DialogTitle className="sr-only">Navigation</DialogTitle>

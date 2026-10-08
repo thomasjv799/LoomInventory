@@ -1,22 +1,48 @@
-# Frontend and data architecture
+# Frontend and backend architecture
 
-## Current runtime
+Two explicit modes share metric formulas. `demo` uses deterministic JSON and browser-local settings/additions; `convex` uses Better Auth and authorized report APIs. Authenticated builds remove the public fixture file, and fixture loading rejects authenticated mode.
 
 ```mermaid
 flowchart LR
-    G[Deterministic Python generator] --> F[data/mock-data.json]
-    F --> P[public/mock-data.json]
-    F --> E[Relational seed exporter]
-    E --> J[Normalized JSONL + contracts]
-    J --> V[SQLite reconciliation checks]
-    P --> A[Async fixture provider]
-    A --> C[Shared analytics]
-    C --> D[Dashboard sections]
-    U[URL filters + local settings] --> C
-    D --> X[Drawers, charts and CSV]
+    A[Google / Microsoft] --> B[Better Auth Convex component]
+    B --> C[Next.js session bridge]
+    C --> D[Membership and location checks]
+    D --> E[Convex business APIs]
+    E --> F[Immutable ledger and balances]
+    E --> G[Versioned report runs]
+    G --> H[Eight dashboard sections]
+    P[Python normalized demo package] --> I[Validated inactive version]
+    I --> F
 ```
 
-Next.js serves a static application shell and the public fixture. The interactive dashboard is a client component. No API server, authentication service, backend database or environment secret is required. The provider caches its loading promise, retries after failure by clearing that cache, and returns typed Dataset objects. TypeScript types are compile-time guarantees; the browser does not perform comprehensive runtime fixture validation. Offline generation tests provide that assurance for committed fixtures.
+| Path | Responsibility |
+| --- | --- |
+| `convex/schema.ts` | Typed tables, relationships and indexes |
+| `convex/access.ts` | Identity, membership, capabilities and store grants |
+| `convex/auth.ts`, `app/api/auth` | Official Better Auth integration; provider secrets remain in Convex |
+| `convex/catalogue.ts`, `inventory.ts` | Scoped catalogue and paginated stock/history reads |
+| `convex/operations.ts`, `domain/stock.ts` | Atomic receipt, sale, transfer, return, QC and bin movements |
+| `convex/domain/idempotency.ts` | Payload fingerprint, stored result, audit and source watermark in one mutation |
+| `convex/reports.ts`, `reportWorker.ts` | Authorized asynchronous snapshots, stable pages and readiness/staleness |
+| `convex/settings.ts`, `exports.ts` | Versioned thresholds and permission-checked CSV continuations |
+| `convex/imports.ts`, `domain/seed.ts` | Normalized staging, reconciliation and atomic dataset activation |
+| `convex/http.ts`, `app/api/v1` | Bearer-token HTTP adapter and same-origin signed-in proxy |
+| `lib/report-adapters.ts` | Shared report formulas and all fifteen business questions |
+| `lib/providers/convex.ts` | Bounded authenticated frontend provider |
+| `lib/provider.ts`, `lib/providers/fixture.ts` | Explicit local demo loading and report adapter |
+| `components/convex-dashboard.tsx` | Authenticated reports, filters, charts, drawers, catalogue form and settings |
+| `components/dashboard.tsx` | Original polished fixture dashboard |
+| `components/workspace-gate.tsx`, `app/error.tsx` | Loading, signed-out, access-pending and error boundaries |
+| `scripts/seed-convex.ts`, `import-convex.ts` | Explicit owner seed and authenticated administrator snapshot import |
+| `netlify.toml`, `.github/workflows/check.yml` | Deployment build configuration and credential-independent checks |
+
+Reports never send the raw ledger to the browser. Current workers read indexed pages into a server-side snapshot capped at 50,000 source rows; incremental `dailySales`/exposure pipelines are follow-up work. Runs bind organization, active version, data watermark, settings version and permission fingerprint. Changing any of these requires refresh; every page/export checks access again.
+
+All operational mutations keep ledger/balance/financial/transfer changes in one transaction. Replaying a key with the same input returns its previous result; changing the payload conflicts. New operational dates advance the completed-day report cutoff. Imports create an invisible version, validate/reconcile it, and atomically switch the active pointer only if no intervening data write occurred. Existing grants remap by stable external location IDs.
+
+Current APIs use opaque Convex document IDs, with external business IDs preserved in records and source transport. There is no running FastAPI/PostgreSQL service. Read [backend setup](backend-setup.md) for limits and [deployment runbook](deployment-runbook.md) for the live checks still required.
+
+## Historical fixture architecture notes
 
 ## File map
 
@@ -69,4 +95,4 @@ The committed lockfile records the working package versions. Next.js/React/TypeS
 
 ## Next-phase refactoring
 
-The eight-view dashboard is a practical prototype module, not a final application architecture. Extract per-section modules and typed query hooks when introducing report APIs. Keep the shared table/chart/drawer presentation intact. Move authoritative calculations, authorization, stock mutation and shared settings to FastAPI; retain the fixture provider as a switchable demo/testing source. Add a query cache with authorized scope/settings/snapshot keys and a runtime response validator. Do not simply expose the entire ledger as a production substitute for the current `load()` method.
+The eight-view dashboard is a practical prototype module, not a final application architecture. Extract per-section modules and typed query hooks when introducing report APIs. Keep the shared table/chart/drawer presentation intact. In the original proposal, authoritative calculations, authorization, stock mutation and shared settings were to move to FastAPI; that proposal is superseded by the Convex implementation above. retain the fixture provider as a switchable demo/testing source. Add a query cache with authorized scope/settings/snapshot keys and a runtime response validator. Do not simply expose the entire ledger as a production substitute for the current `load()` method.

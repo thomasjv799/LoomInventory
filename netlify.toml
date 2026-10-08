@@ -1,0 +1,25 @@
+[build]
+  command = "npm run deploy:netlify"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+  NEXT_PUBLIC_DATA_MODE = "convex"
+
+[context.deploy-preview.environment]
+  DEPLOYMENT_ENV = "preview"
+
+[context.production.environment]
+  DEPLOYMENT_ENV = "production"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"

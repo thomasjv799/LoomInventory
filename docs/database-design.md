@@ -1,5 +1,9 @@
 # Database design for the backend milestone
 
+**Historical proposal, superseded on 8 October 2026.** The running source now uses Convex/TypeScript and Better Auth. The SQL/FastAPI/Supabase material below is retained for reference, not an additional deployed service. Use [backend setup](backend-setup.md), [runtime schema](../convex/schema.ts), [implemented API](api/convex-openapi.json) and [deployment runbook](deployment-runbook.md) for current work. The production follow-ups are scalable incremental report aggregates, live provider/deployment smoke tests, load tests, backups and restore drills.
+
+## Original proposal
+
 ## Proposed foundation
 
 Use standard PostgreSQL on Supabase, accessed through Python/FastAPI. Keep stock and sales tables in an unexposed `inventory` schema. The UI reads authorized API reports rather than downloading a company's full ledger. Supabase Auth may issue identity tokens; FastAPI must validate them and apply organization/location permissions before accessing data.

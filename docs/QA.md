@@ -73,3 +73,17 @@ This is a manual accessibility review plus semantic checks, not a formal assisti
 - Independent review findings about omitted composite-FK metadata and integer API booleans resolved and rechecked. No remaining findings from that review.
 - All eight views checked again at 375/768/1024/1440px; document width matches viewport width. Updated all fourteen screenshots. Product/rationale drawers and mobile navigation exercised; mobile navigation returns focus to its opener.
 - PostgreSQL draft execution and actual FastAPI authorization/concurrency tests remain next-phase gates. SQLite validation is not represented as PostgreSQL deployment validation.
+
+## Convex / Better Auth source milestone — 8 October 2026
+
+This record supersedes earlier statements that there is no backend. The SQL/FastAPI draft remains historical.
+
+- Clean `npm ci` completed; current dependency audit reported zero vulnerabilities.
+- 58 Vitest tests and 20 Python tests passed; TypeScript checks passed. Both demo and authenticated-mode production builds passed.
+- Real local Convex seed reconciliation: 30 products, 150 variants, 7,471 sales, 16,853 ledger rows, 9,823 physical units, 44 transit units, 3,551,986,820 paise net revenue. Repeated chunks do not duplicate data.
+- Tests cover sale retry/oversell, competing transfers, partial/over receipts, central ownership, quarantine/QC, bin moves, revoked grant pages/exports, viewer cost redaction, denied writes, stale import activation and dangling reference preflight.
+- HTTP catalogue creation/read was tested through the actual router; missing identity returns 401 and malformed JSON returns 422. Local Next.js proxy smoke: unauthenticated API 401, foreign-origin write 403, public fixture route 404 in authenticated mode.
+- Signed-out authenticated browser requests redirect to `/login`, preserving a safe return path. Login preview checked at 375/768/1024/1440px without horizontal overflow; screenshots committed.
+- Add-product form exercised in demo mode. S/M dress persisted after reload, had zero stock at all six locations, used an intentional missing-image fallback, and restored focus to its Add product opener. Screenshot: `screenshots/add-product-zero-stock-1440.jpg`.
+- Earlier all-eight-section fixture responsive and accessibility checks remain baseline evidence. Authenticated screen source compiles and backend behavior has tests, but signed-in responsive/accessibility review is **not** claimed without real provider configuration.
+- Google/Microsoft OAuth callbacks, cloud concurrency, Netlify cookies/runtime, backups/restore and production load remain unverified deployment gates. This prototype is capped at 50,000 source rows per report/import snapshot and 100 membership remaps at activation; continuous aggregates are follow-up work.

@@ -1,10 +1,14 @@
 # The Loom · Inventory Studio
 
-A reviewable Next.js / TypeScript frontend prototype with eight clickable sections, a 30-product image-referenced catalogue and deterministic synthetic inventory history. **All business data is simulated.** There are no uploads, live integrations, backend credentials or stock-operation workflows.
+A Next.js/TypeScript inventory dashboard with a Convex database, scoped report and stock APIs, and Better Auth Google/Microsoft sign-in. All eight sections support explicit local demo mode; authenticated mode uses authorized, paginated backend reports. **All committed business data is simulated.** Provider credentials and cloud deployment remain external setup steps.
+
+See [backend setup](docs/backend-setup.md), [deployment runbook](docs/deployment-runbook.md) and [implemented HTTP contract](docs/api/convex-openapi.json). Add product creates a style and its sizes with zero stock; receipts are separate stock operations.
 
 ## Run locally
 
-Requires Node 22.13+ and Python 3.10+. Python uses only its standard library.
+Copy `.env.example` to `.env.local` and keep `NEXT_PUBLIC_DATA_MODE=demo` for credential-free review. For authenticated mode, follow the backend setup guide.
+
+Requires Node 24 and Python 3.10+. Python uses only its standard library.
 
 ```sh
 npm ci
@@ -68,7 +72,7 @@ Diwali date records include source references from the [Government of India 2024
 
 ## Documentation and backend handoff
 
-Start with the [documentation index](docs/README.md), [dashboard guide](docs/dashboard-guide.md) and [metric definitions](docs/metrics.md). The [data dictionary](docs/data-dictionary.md) explains the 17-table [normalized import package](data/normalized/manifest.json); the [database design](docs/database-design.md), [API design](docs/api-design.md), [OpenAPI contract](docs/api/openapi.json) and [backend roadmap](docs/backend-roadmap.md) define the next milestone. SQL and API artifacts are proposed contracts, not deployed services.
+Start with the [documentation index](docs/README.md), [dashboard guide](docs/dashboard-guide.md) and [metric definitions](docs/metrics.md). The [data dictionary](docs/data-dictionary.md) explains the 17-table [normalized import package](data/normalized/manifest.json); the [database design](docs/database-design.md), [API design](docs/api-design.md), [OpenAPI contract](docs/api/openapi.json) and [backend roadmap](docs/backend-roadmap.md) define the next milestone. The earlier SQL/FastAPI artifacts are historical proposals; the Convex schema and HTTP contract describe the current source.
 
 ```sh
 npm run seed:database
@@ -80,4 +84,4 @@ The export preserves all stock/sales records, qualifies reused synthetic bill re
 
 ## Next milestone
 
-Replace fixtures with Python / FastAPI and Supabase PostgreSQL after UI review, preserving movement-led accounting, ownership, quarantine and transfer states. Authentication, permissions, imports, approval workflows, durable audit logs and production forecasting belong to that later milestone.
+The Convex source now supplies authentication, membership permissions, ledger operations, normalized snapshot imports and authorized reports. Before production, configure provider/deployment credentials, run isolated live smoke tests, and extend the capped workers into scalable incremental aggregates. Backups, recovery drills, approval workflows and production forecasts remain follow-up work.

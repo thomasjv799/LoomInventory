@@ -1,5 +1,9 @@
 # Backend implementation roadmap
 
+**Historical proposal, superseded on 8 October 2026.** The running source now uses Convex/TypeScript and Better Auth. The SQL/FastAPI/Supabase material below is retained for reference, not an additional deployed service. Use [backend setup](backend-setup.md), [runtime schema](../convex/schema.ts), [implemented API](api/convex-openapi.json) and [deployment runbook](deployment-runbook.md) for current work. The production follow-ups are scalable incremental report aggregates, live provider/deployment smoke tests, load tests, backups and restore drills.
+
+## Original proposal
+
 This phase defines data and API contracts. It does not implement hosted storage, imports or operational writes. Preserve the functioning fixture prototype while introducing one backend slice at a time.
 
 ## 1. Contract and database validation

@@ -227,3 +227,6 @@ out/
 *.tsbuildinfo
 .superpowers/
 .serena/
+
+# Local Convex database and seed resume state
+.convex/
