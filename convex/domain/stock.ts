@@ -49,7 +49,12 @@ export async function delta(
         .eq("variantId", input.variantId)
         .eq("locationId", input.locationId),
     )
-    .take(100);
+    .take(101);
+  if (balances.length > 100)
+    fail(
+      "CONFLICT",
+      "Stock balance limit exceeded; consolidate bins before this operation",
+    );
   const balance = balances.find(
     (b) => b.binId === input.binId && b.condition === condition,
   );
@@ -73,7 +78,12 @@ export async function delta(
           .eq("variantId", input.variantId)
           .eq("locationId", input.locationId),
       )
-      .take(100);
+      .take(101);
+    if (reservations.length > 100)
+      fail(
+        "CONFLICT",
+        "Reservation limit exceeded; consolidate reservations before this operation",
+      );
     if (
       !bin.excludedFromAvailability &&
       sellable -

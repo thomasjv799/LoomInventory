@@ -45,6 +45,11 @@ export const create = mutation({
         "INVALID_INPUT",
         "Provide all eleven input types and an explicit opening cutoff",
       );
+    if (Object.keys(tableMap).some((table) => !(table in args.expectedCounts)))
+      fail(
+        "INVALID_INPUT",
+        "Complete manifest required: declare every normalized table, including explicit zero counts",
+      );
     for (const [table, count] of Object.entries(args.expectedCounts)) {
       if (!(table in tableMap)) fail("INVALID_INPUT", "Unknown expected table");
       integer(count, "Expected row count");
@@ -256,6 +261,19 @@ export const finish = internalMutation({
   handler: async (ctx, args) => {
     const b = await ctx.db.get(args.batchId);
     if (!b) fail("NOT_FOUND", "Batch not found");
+    const org = await ctx.db.get(b.organizationId);
+    if (
+      b.status === "ready" ||
+      org?.activeDatasetVersionId === b.datasetVersionId
+    ) {
+      if (b.status !== "ready")
+        await ctx.db.patch(b._id, {
+          status: "ready",
+          cursor: null,
+          rejected: 0,
+        });
+      return;
+    }
     await ctx.db.patch(b._id, {
       status: args.status,
       cursor: args.message ?? null,
@@ -338,12 +356,30 @@ export const activate = internalMutation({
   args: {
     datasetVersionId: v.id("datasetVersions"),
     expectedSourceWatermark: v.number(),
+    batchId: v.optional(v.id("importBatches")),
   },
   handler: async (ctx, args) => {
     const version = await ctx.db.get(args.datasetVersionId);
     if (!version || version.status !== "ready")
       fail("CONFLICT", "Version is not reconciled");
     const org = await ctx.db.get(version.organizationId);
+    const batch = args.batchId ? await ctx.db.get(args.batchId) : null;
+    if (
+      args.batchId &&
+      (!batch ||
+        batch.datasetVersionId !== version._id ||
+        batch.organizationId !== version.organizationId)
+    )
+      fail("INVALID_INPUT", "Invalid activation batch");
+    if (org?.activeDatasetVersionId === version._id) {
+      if (batch)
+        await ctx.db.patch(batch._id, {
+          status: "ready",
+          cursor: null,
+          rejected: 0,
+        });
+      return { organizationId: org._id, datasetVersionId: version._id };
+    }
     if (
       !org ||
       org.sourceWatermark !== args.expectedSourceWatermark ||
@@ -393,6 +429,12 @@ export const activate = internalMutation({
       requestId: version.sourceHash,
       at: Date.now(),
     });
+    if (batch)
+      await ctx.db.patch(batch._id, {
+        status: "ready",
+        cursor: null,
+        rejected: 0,
+      });
     return { organizationId: org._id, datasetVersionId: version._id };
   },
 });
@@ -407,6 +449,7 @@ export const advance = internalAction({
         batchId: args.batchId,
       });
       if (!batch) throw new Error("Batch not found");
+      if (["ready", "failed"].includes(batch.status)) return;
       const chunks = [];
       let cursor: string | null = null;
       do {
@@ -462,6 +505,7 @@ export const advance = internalAction({
       await ctx.runMutation(internal.imports.activate, {
         datasetVersionId: batch.datasetVersionId,
         expectedSourceWatermark: versionBase!.baseWatermark,
+        batchId: batch._id,
       });
       await ctx.runMutation(internal.imports.finish, {
         batchId: args.batchId,

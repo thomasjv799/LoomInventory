@@ -302,8 +302,13 @@ export function buildReport(
       "Price bands use actual transaction value per unit. Unknown prices stay unknown. Trend windows use completed days relative to as-of, independent of the display date filter.",
     );
   } else if (name === "size-packs") {
+    const sizeCohort = filterInventory(
+      d,
+      { ...f, size: undefined, status: undefined },
+      s,
+    );
     result.rows = inv.map((r) => {
-      const style = inv.filter(
+      const style = sizeCohort.filter(
           (x) => x.productId === r.productId && x.locationId === r.locationId,
         ),
         total = sum(style, (x) => x.sold),

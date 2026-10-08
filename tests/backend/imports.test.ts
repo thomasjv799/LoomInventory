@@ -2,6 +2,11 @@ import { test, expect } from "vitest";
 import { workspace } from "./fixtures";
 import { makeFunctionReference } from "convex/server";
 import { readFileSync } from "node:fs";
+import { tableMap } from "../../convex/domain/seed";
+const completeCounts = (counts: Record<string, number>) => ({
+  ...Object.fromEntries(Object.keys(tableMap).map((table) => [table, 0])),
+  ...counts,
+});
 import { inputTypes } from "../../convex/domain/imports";
 test("rejects activation after an intervening operational write", async () => {
   const { t, signed, organizationId } = await workspace();
@@ -11,7 +16,12 @@ test("rejects activation after an intervening operational write", async () => {
     sourceHash: "new",
     asOf: "2026-10-06",
     cutoff: "2024-10-06",
-    expectedCounts: { locations: 1, bins: 1, products: 1, variants: 1 },
+    expectedCounts: completeCounts({
+      locations: 1,
+      bins: 1,
+      products: 1,
+      variants: 1,
+    }),
     inputTypes: [
       "product-master",
       "opening-ho",
@@ -51,7 +61,11 @@ test("preflight rejects dangling references before writing an inactive version",
       sourceHash: "dangling",
       asOf: "2026-10-06",
       cutoff: "2024-10-06",
-      expectedCounts: { locations: 1, products: 1, variants: 1 },
+      expectedCounts: completeCounts({
+        locations: 1,
+        products: 1,
+        variants: 1,
+      }),
       inputTypes: [...inputTypes],
       idempotencyKey: "dangling",
     },

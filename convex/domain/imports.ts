@@ -43,6 +43,34 @@ export function reconcileSnapshot(snapshot: Snapshot) {
       fail("INVALID_INPUT", "Sales deduction reconciliation failed");
     deductions.add(m._id);
   }
+  const transfers = new Map(snapshot.transfers.map((t) => [t._id, t]));
+  const receiptMovements = new Set<string>();
+  const received = new Map<string, number>();
+  for (const receipt of snapshot.transferReceipts) {
+    const transfer = transfers.get(receipt.transferId),
+      movement = movements.get(receipt.linkedMovementId);
+    if (
+      !transfer ||
+      !movement ||
+      !Number.isSafeInteger(receipt.quantity) ||
+      receipt.quantity <= 0 ||
+      movement.variantId !== transfer.variantId ||
+      movement.locationId !== transfer.destinationId ||
+      movement.quantityDelta !== receipt.quantity ||
+      movement.condition !== "sellable" ||
+      movement.effectiveAt !== receipt.receiptDate ||
+      receiptMovements.has(movement._id)
+    )
+      fail("INVALID_INPUT", "Transfer receipt movement reconciliation failed");
+    receiptMovements.add(movement._id);
+    received.set(
+      transfer._id,
+      (received.get(transfer._id) ?? 0) + receipt.quantity,
+    );
+  }
+  for (const transfer of snapshot.transfers)
+    if ((received.get(transfer._id) ?? 0) !== transfer.received)
+      fail("INVALID_INPUT", "Transfer receipt total reconciliation failed");
   if (
     snapshot.transfers.some((t) => t.received > t.dispatched || t.received < 0)
   )

@@ -502,9 +502,19 @@ export default function ConvexDashboard() {
                         <option value="">All</option>
                         {[
                           ...new Set(
-                            key === "size"
-                              ? ["XS", "S", "M", "L", "XL", "XXL", "Free size"]
-                              : styles.map((p) => p[key]),
+                            report?.facets?.[key]?.map((f) => f.value) ??
+                              (key === "size"
+                                ? [
+                                    "XS",
+                                    "S",
+                                    "M",
+                                    "L",
+                                    "XL",
+                                    "XXL",
+                                    "3XL",
+                                    "Free size",
+                                  ]
+                                : styles.map((p) => p[key])),
                           ),
                         ]
                           .sort()
@@ -710,13 +720,26 @@ export default function ConvexDashboard() {
                               {c.key === "name" && row.productId ? (
                                 <button
                                   className="product-link"
-                                  onClick={() => {
+                                  onClick={async () => {
+                                    rememberFocus();
                                     const p = productsByExternal.get(
                                       String(row.productId),
                                     );
                                     if (p) {
                                       rememberFocus();
                                       setProductId(p._id);
+                                    } else if (provider) {
+                                      try {
+                                        const resolved =
+                                          await provider.resolveProduct(
+                                            String(row.productId),
+                                          );
+                                        setProductId(resolved.productId);
+                                      } catch {
+                                        setError(
+                                          "Product details are unavailable. Refresh the report.",
+                                        );
+                                      }
                                     }
                                   }}
                                 >

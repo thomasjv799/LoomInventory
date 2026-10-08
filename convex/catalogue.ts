@@ -28,6 +28,27 @@ export const productInputValidator = v.object({
     }),
   ),
 });
+export const resolve = query({
+  args: { organizationId: v.id("organizations"), externalId: v.string() },
+  handler: async (ctx, args) => {
+    const scope = await requireAccess(ctx, {
+      organizationId: args.organizationId,
+      capability: "read",
+    });
+    if (!scope.datasetVersionId) fail("NOT_FOUND", "No active catalogue");
+    const product = await ctx.db
+      .query("products")
+      .withIndex("by_external", (q) =>
+        q
+          .eq("organizationId", scope.organizationId)
+          .eq("datasetVersionId", scope.datasetVersionId!)
+          .eq("externalId", args.externalId),
+      )
+      .unique();
+    if (!product) fail("NOT_FOUND", "Product not found");
+    return { productId: product._id, externalId: product.externalId };
+  },
+});
 function validate(input: typeof productInputValidator.type) {
   if (!Number.isFinite(input.kurtaLength) || input.kurtaLength < 0)
     fail("INVALID_INPUT", "Kurta length must be finite and nonnegative");

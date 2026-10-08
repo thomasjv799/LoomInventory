@@ -23,6 +23,12 @@ export class ConvexInventoryProvider implements InventoryProvider {
       ...input,
     });
   }
+  resolveProduct(externalId: string) {
+    return this.client.query(api.catalogue.resolve, {
+      organizationId: this.organizationId,
+      externalId,
+    });
+  }
   getProduct(productId: Id<"products">) {
     return this.client.query(api.catalogue.detail, {
       organizationId: this.organizationId,

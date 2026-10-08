@@ -11,6 +11,14 @@ The implemented backend uses TypeScript on Convex and Better Auth with Google/Mi
 5. Configure `SITE_URL` and a strong `BETTER_AUTH_SECRET` in the Convex deployment. Set Google/Microsoft OAuth credentials there. Switch frontend mode to `convex`, fill all three public URLs and restart Next.js.
 6. Sign in, then grant the resulting stable auth user ID through the deployment-owner-only `bootstrap:firstAdministrator` command with the explicit organization ID. New sign-ins have no inventory access by default. Subsequent membership changes use the administrator-only function.
 
+The deployment owner can bootstrap the first signed-in administrator after activation:
+
+```sh
+npx convex run bootstrap:firstAdministrator '{"authUserId":"ACTUAL_AUTH_USER_ID","organizationId":"ACTUAL_ORGANIZATION_ID"}'
+```
+
+Use the user ID from the Better Auth component's user record, and the organization ID printed/retained by the explicit seed command. This internal command is unavailable to public API callers. No ID is derived from an email address.
+
 Local stock and sales data are simulated. No seed command runs automatically during application startup or a build. `.convex/`, `.env.local` and deploy/provider secrets are ignored by Git.
 
 ## Add a new dress
@@ -29,7 +37,7 @@ The snapshot import API accepts a complete normalized package, declaring all ele
 
 Run `tsx scripts/import-convex.ts --cutoff=YYYY-MM-DD --directory=/path/to/normalized` with a temporary authenticated administrator `CONVEX_IMPORT_TOKEN`, public backend URL and `IMPORT_ORGANIZATION_ID`. It checks file hashes, stages chunks, validates counts/references and prints the batch ID. Add `--commit` explicitly to request reconciliation and activation. Do not log or commit the token.
 
-Each chunk is capped at 100 rows and 256 KiB. Imports prepare an invisible dataset version. Ready publication atomically switches the organization pointer, remaps existing store grants by external location IDs and preserves membership/audit records. If operational data changes during preparation, activation conflicts and the current dataset stays intact; prepare a fresh snapshot. Rejected source references identify the source ID. Status and rejection endpoints are administrator-only.
+The manifest must declare every normalized table, including zero counts for deliberately empty tables. Each chunk is capped at 100 rows and 256 KiB. Imports prepare an invisible dataset version. Ready publication atomically switches the organization pointer, remaps existing store grants by external location IDs and preserves membership/audit records. If operational data changes during preparation, activation conflicts and the current dataset stays intact; prepare a fresh snapshot. Rejected source references identify the source ID. Status and rejection endpoints are administrator-only.
 
 ## Backend surfaces
 
@@ -39,6 +47,8 @@ Each chunk is capped at 100 rows and 256 KiB. Imports prepare an invisible datas
 - Reports are asynchronous runs. Request preparation, wait for ready, then paginate/export one run. Revoked or narrowed access invalidates cached pages/exports; changed data/settings returns stale rather than mixing versions.
 
 ## Prototype limits and verification
+
+Operational writes additionally fail closed if one variant/location exceeds 100 balance rows or 100 reservation rows; consolidate those records or implement complete transactional aggregates before lifting the limit.
 
 Current report preparation and import reconciliation use indexed source pages of 100 rows, with a **50,000 total source-row guard** per snapshot job. The committed sample fits this bound. This is a prototype safety limit, not enterprise throughput evidence. Daily-sales and exposure tables are schema foundations; continuous incremental aggregate pipelines and larger-scale streaming workers are follow-up work. Activation additionally limits membership remapping to 100 users; exceeding the limit fails without publishing partial data.
 

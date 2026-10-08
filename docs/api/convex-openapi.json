@@ -99,6 +99,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -178,6 +188,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -250,6 +270,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -340,6 +370,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -447,6 +487,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -563,6 +613,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -653,6 +713,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -785,6 +855,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -906,6 +986,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1017,6 +1107,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -1169,6 +1269,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1257,6 +1367,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -1296,9 +1416,9 @@
         }
       }
     },
-    "/reports/{reportName}": {
+    "/reports/{reportId}": {
       "post": {
-        "operationId": "post_reports_reportName",
+        "operationId": "post_reports_reportId",
         "summary": "Prepare an authorized report snapshot",
         "description": "Names: overview, inventory, stores, rotation, sales, replenishment, ho-shortages, slow-stock, size-packs, forecasts, events, dupatta. Network reports require networkRead and all location grants. Store filters use external location IDs. History is capped at 50,000 rows; projections are precomputed demo values.",
         "responses": {
@@ -1371,11 +1491,21 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
-            "name": "reportName",
+            "name": "reportId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1423,11 +1553,9 @@
             }
           }
         }
-      }
-    },
-    "/reports/{runId}": {
+      },
       "get": {
-        "operationId": "get_reports_runId",
+        "operationId": "get_reports_reportId",
         "summary": "Read one page from a ready snapshot",
         "description": "Never mix cursors across run IDs. Changed data/settings returns stale. Narrowed grants/revoked membership deny access.",
         "responses": {
@@ -1500,11 +1628,21 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
           {
-            "name": "runId",
+            "name": "reportId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1618,6 +1756,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1718,6 +1866,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -1863,6 +2021,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -1987,6 +2155,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -2125,6 +2303,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -2249,6 +2437,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -2412,6 +2610,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -2553,6 +2761,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -2672,6 +2890,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -2822,6 +3050,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -2848,10 +3086,91 @@
                   },
                   "expectedCounts": {
                     "type": "object",
-                    "additionalProperties": {
-                      "type": "integer",
-                      "minimum": 0
-                    }
+                    "properties": {
+                      "locations": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "bins": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "products": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "product_images": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "variants": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "transfers": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "inventory_ledger": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "transfer_receipts": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "sales_orders": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "sales_lines": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "reservations": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "matching_relationships": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "events": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "influencer_activity": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "forecast_runs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "forecast_values": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "locations",
+                      "bins",
+                      "products",
+                      "product_images",
+                      "variants",
+                      "transfers",
+                      "inventory_ledger",
+                      "transfer_receipts",
+                      "sales_orders",
+                      "sales_lines",
+                      "reservations",
+                      "matching_relationships",
+                      "events",
+                      "influencer_activity",
+                      "forecast_runs",
+                      "forecast_values"
+                    ],
+                    "additionalProperties": false
                   },
                   "inputTypes": {
                     "type": "array",
@@ -2949,6 +3268,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -3079,6 +3408,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -3182,6 +3521,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -3299,6 +3648,16 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -3391,6 +3750,16 @@
           },
           "500": {
             "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Backend unavailable or not configured",
             "content": {
               "application/json": {
                 "schema": {
@@ -3692,9 +4061,6 @@
               },
               "message": {
                 "type": "string"
-              },
-              "requestId": {
-                "type": "string"
               }
             },
             "required": [
@@ -3702,6 +4068,9 @@
               "message"
             ],
             "additionalProperties": false
+          },
+          "requestId": {
+            "type": "string"
           }
         },
         "required": [
