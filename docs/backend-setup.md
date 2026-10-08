@@ -43,6 +43,12 @@ The local review account is `admin@inventory.local`; its generated password is i
 
 Public Netlify builds require authenticated Convex mode and reject anonymous fixture mode. The login page has no demo bypass. Local fixture mode remains available only as an explicit development tool; the review preview now runs in authenticated mode.
 
+## Open Google access to the demo
+
+Set `GOOGLE_OPEN_ACCESS_ORGANIZATION_ID` in Convex to the explicitly chosen synthetic organization. On first sign-in, the workspace gate calls `googleAccess.join`: it validates a current Better Auth session and a linked Google provider record, then creates a viewer membership across active demo locations. It does not accept a target organization from the browser, infer eligibility from an email domain, grant cost/write/admin permissions, upgrade existing memberships or reactivate revoked access. A real-data organization is rejected. Unset this variable to stop new automatic enrollments; existing memberships must be revoked separately.
+
+The sidebar shows the authenticated profile name. Google OAuth must use an External audience published to Production to support accounts beyond the project's allowed test users. Google configuration and workspace authorization are separate controls.
+
 ## Data and import format
 
 The eleven logical inputs remain in `data/inputs/`; the canonical normalized transport is in `data/normalized/`, with checksums, expected counts and dependency order. Catalogue/locations/bins, variants, transfers, ledger, receipts and financial/context records are loaded in that order. All references are remapped from source IDs into scoped Convex IDs. The ledger includes 900 opening rows plus 15,953 subsequent movements.

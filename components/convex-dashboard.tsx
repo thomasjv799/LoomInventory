@@ -296,8 +296,7 @@ export default function ConvexDashboard() {
         ))}
       </nav>
       <div className="sidebar-bottom">
-        <span>{membership?.organization?.name}</span>
-        <small>{membership?.role}</small>
+        <span>{me?.user.name}</span>
       </div>
     </div>
   );

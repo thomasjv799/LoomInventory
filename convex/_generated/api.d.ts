@@ -20,6 +20,7 @@ import type * as domain_snapshot from "../domain/snapshot.js";
 import type * as domain_stock from "../domain/stock.js";
 import type * as domain_validation from "../domain/validation.js";
 import type * as exports from "../exports.js";
+import type * as googleAccess from "../googleAccess.js";
 import type * as http from "../http.js";
 import type * as imports from "../imports.js";
 import type * as initialAccount from "../initialAccount.js";
@@ -50,6 +51,7 @@ declare const fullApi: ApiFromModules<{
   "domain/stock": typeof domain_stock;
   "domain/validation": typeof domain_validation;
   exports: typeof exports;
+  googleAccess: typeof googleAccess;
   http: typeof http;
   imports: typeof imports;
   initialAccount: typeof initialAccount;
