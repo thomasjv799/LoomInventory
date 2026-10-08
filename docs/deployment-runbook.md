@@ -1,6 +1,6 @@
 # Netlify and Convex deployment runbook
 
-Source configuration is supplied; no cloud project or public deployment was created during implementation.
+Production is deployed at https://loominventory.netlify.app with Convex deployment `animated-badger-72` in Sydney. Initial synthetic data was reconciled and activated on 8 October 2026; the owner-provisioned administrator has access to all six locations. Initial-account environment variables were removed and `ALLOW_SYNTHETIC_SEED=false` restored. See [QA record](QA.md) for verification and remaining checks. Deployment keys and account passwords are not committed.
 
 ## Configure the environments
 

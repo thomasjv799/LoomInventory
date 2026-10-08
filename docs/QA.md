@@ -107,3 +107,11 @@ Final independent review found six important issues; all were fixed in one regre
 - Actual HTTP checks: public password signup 400, incorrect password 401, unauthenticated inventory API 401 and public fixture URL 404. Google/Microsoft callbacks remain unconfigured and unverified; password sign-in does not require those credentials.
 - Netlify anonymous-demo deployments and public password environment variables fail validation. Database-backed authentication rate limiting is enabled. Login screenshots updated at 375/768/1024/1440px; no credentials appear in them.
 - Final suite: 76 Vitest tests pass. TypeScript and authenticated production build pass.
+
+## Production deployment — 8 October 2026
+
+- Netlify site: https://loominventory.netlify.app. Convex production: `animated-badger-72.ap-southeast-2.convex.cloud`. Browser verified anonymous visitors reach email/password login, without a demo bypass.
+- Initial production database was empty. Imported the committed normalized fixtures with checked source hashes and separate production resume state. Reconciliation passed: 30 products, 150 variants, 7,471 sales lines, 16,853 ledger rows, 9,823 physical units, 44 transit units and 3,551,986,820 paise net sales. The dataset is active and ready, explicitly synthetic.
+- Provisioned the account using the owner's Convex environment values. Verified its active administrator membership grants all six locations. Account credentials were not read or copied into source. Removed both `INITIAL_ACCOUNT_*` variables and restored `ALLOW_SYNTHETIC_SEED=false`.
+- Deployed HTTP checks: anonymous inventory API 401, public fixture URL 404, public email/password registration 400. These checks do not prove a successful production browser session; the owner must sign in using their selected email/password to confirm cookies and report access. Google/Microsoft callbacks, load testing and backup/restore remain unverified.
+- Production login screenshot: `screenshots/production-login.jpg`. Deploy key, production resume state and administrative setup helper remain in ignored private local files.
